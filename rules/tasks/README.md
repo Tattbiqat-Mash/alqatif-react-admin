@@ -10,12 +10,12 @@ Do them in order — each one builds on the previous. Tick a task only when all 
 | 04 | [Dashboard](04-dashboard.md) — الرئيسية | 03 | ◐ built on the sample; the user confirms on `/v2` |
 | 05 | [Content lists](05-posts-list.md) — الأخبار، الفيديوهات، الصور، وظائف، رسائل شكر، مفقودات | 03 | ◐ list, all six filters and row actions built on samples; the user confirms on `/v2` (and whether "حالات العرض" = `fixed`) |
 | 06 | [Content create / edit](06-posts-form.md) | 05 | ◐ form, create/edit, upload, gallery and custom banners built on samples; edit lock deferred by the user (see Task 06) |
-| 07 | [Comments](07-comments.md) — التعليقات | 05 | ☐ |
-| 08 | [Ads](08-ads.md) — الإعلانات | 06 (image picker) | ☐ |
+| 07 | [Comments](07-comments.md) — التعليقات | 05 | ◐ built; list/details mappings provisional (no samples) |
+| 08 | [Ads](08-ads.md) — الإعلانات | 06 (image picker) | ◐ built; list/details mappings provisional (no samples) |
 | 09 | [Editors](09-editors.md) — المحررين | 03 | ◐ built; `getDetails` mapping provisional until its sample arrives |
-| 10 | [Notifications](10-notifications.md) — الاشعارات | 03 | ☐ |
-| 11 | [Surveys](11-surveys.md) — الاستبيانات | 03 | ☐ |
-| 12 | [Settings](12-settings.md) — الاعدادات العامة | 03 | ◐ built on the sample; open: the 4 extra fields (snapchat, telegram, tiktok, mobile) |
+| 10 | [Notifications](10-notifications.md) — الاشعارات | 03 | ◐ built; only the "عام" type (type 0, topic all) |
+| 11 | [Surveys](11-surveys.md) — الاستبيانات | 03 | ◐ built; details on the sample, list mapping provisional; survey categories TBD |
+| 12 | [Settings](12-settings.md) — الاعدادات العامة | 03 | ◐ built on the sample; the 4 extra fields are passed through on save |
 
 Screenshots of the old admin are the reference for **content** (fields, columns, filters, actions), not for the look. They live in [`screenshots/`](screenshots/), named `<task-number>-<what>.png` (e.g. `05-news-list.png`), and each task links its own. The sidebar and header (Task 03) appear in all of them.
 

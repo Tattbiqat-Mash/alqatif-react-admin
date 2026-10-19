@@ -15,21 +15,12 @@ import { PageHeader } from "@/components/ui/page-header"
 import { SearchInput } from "@/components/ui/search-input"
 import { ForbiddenState } from "@/components/ui/states"
 import { StatusBadge } from "@/components/ui/status-badge"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { IconAction } from "@/components/ui/icon-action"
 import type { EditorListItem } from "@/features/editors/api/editors.api"
 import { useEditorFilters } from "@/features/editors/hooks/use-editor-filters"
 import { useDeleteEditor, useEditorsList, useToggleEditor } from "@/features/editors/hooks/use-editors"
 import { editorStatus, editorType } from "@/lib/labels"
 import { messages } from "@/lib/messages"
-
-function IconAction({ label, children }: { label: string; children: React.ReactElement }) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
-  )
-}
 
 function EditorRowActions({ editor, isSelf }: { editor: EditorListItem; isSelf: boolean }) {
   const toggle = useToggleEditor()

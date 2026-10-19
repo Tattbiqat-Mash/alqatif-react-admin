@@ -1,14 +1,19 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
 
 import { RequirePermission } from "@/components/layout/require-permission"
-import { ScreenPlaceholder } from "@/components/layout/screen-placeholder"
+import { Card } from "@/components/ui/card"
+import { CommentsScreen } from "@/features/comments/components/comments-screen"
 
 export const metadata: Metadata = { title: "التعليقات" }
 
-export default function Page() {
+export default function CommentsPage() {
   return (
     <RequirePermission permission="allowComments">
-      <ScreenPlaceholder title="التعليقات" task="07" />
+      {/* Filters live in the URL (nuqs → useSearchParams), which needs a boundary. */}
+      <Suspense fallback={<Card className="h-96" />}>
+        <CommentsScreen />
+      </Suspense>
     </RequirePermission>
   )
 }

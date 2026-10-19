@@ -9,6 +9,14 @@
 
 Never invent an endpoint, method, field, or enum value. If something is not in the collection or the rules, ask the user.
 
+## Responses that are not available yet (2026-10-19)
+
+The user cannot provide the replies of **add / edit / delete / toggle** calls for now ("we'll see the responses later"). Until they do:
+
+- Any non-error reply to a mutation counts as success; the app then refetches the affected lists/details.
+- Screens whose **list / details** samples are missing are built with **provisional** mappings (`pickText` / `pickNumber` / `unwrapDetails` in `src/lib/api/parse.ts`, candidate keys from the collection's request fields and the old screenshots), each flagged `⚠ TBD — PROVISIONAL` in code. Replace them with the real DTO when a sample arrives.
+- Never drop data the form does not show: fields the details carry but the save body lacks are passed through unchanged (e.g. settings' snapchat / telegram / tiktok / mobile).
+
 ## What is confirmed (observed once during setup, before the no-requests rule)
 
 | Fact | Detail |

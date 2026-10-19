@@ -1,6 +1,7 @@
 import { endpoints } from "@/config/endpoints"
-import { UPLOADED_IMAGES_BASE, type ContentTypeConfig } from "@/config/content-types"
-import { apiGet, apiPost, apiUpload } from "@/lib/api/client"
+import type { ContentTypeConfig } from "@/config/content-types"
+import { apiGet, apiPost } from "@/lib/api/client"
+import { uploadImageTo } from "@/lib/api/upload"
 import { ApiError } from "@/lib/api/errors"
 import { toNumber, toText } from "@/lib/api/parse"
 import { emptyPostValues, type PostFormValues } from "@/features/posts/schemas/post.schema"
@@ -10,7 +11,6 @@ import type {
   PostSaveRequestDto,
   CategoryBannersResponseDto,
   ListImagesResponseDto,
-  UploadImageResponseDto,
 } from "@/features/posts/types/posts.dto"
 
 const bit = (value: boolean): 0 | 1 => (value ? 1 : 0)
@@ -140,20 +140,8 @@ export function updatePost(id: number, values: PostFormValues, content: ContentT
  * `mainImage` holds a **full URL** (confirmed by the user from posts created by the old
  * admin), so the upload resolves to `filePath/fileName`.
  */
-export async function uploadPostImage(file: File, onProgress?: (percent: number) => void): Promise<string> {
-  const form = new FormData()
-  form.append("attachment", file)
-  const raw = await apiUpload<UploadImageResponseDto>(endpoints.posts.uploadImage, form, { onProgress })
-  const fileName = toText(raw?.fileName)
-  if (!fileName) {
-    throw new ApiError({
-      statusCode: 200,
-      message: "تم رفع الصورة لكن تعذر قراءة اسمها من رد الخادم.",
-      serverMessage: "posts/uploadImage: no fileName in the response",
-    })
-  }
-  const folder = (toText(raw?.filePath) || UPLOADED_IMAGES_BASE).replace(/\/+$/, "")
-  return `${folder}/${fileName}`
+export function uploadPostImage(file: File, onProgress?: (percent: number) => void): Promise<string> {
+  return uploadImageTo(endpoints.posts.uploadImage, file, onProgress)
 }
 
 export type GalleryPage = {

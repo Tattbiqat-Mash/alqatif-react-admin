@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
-import { getSettings, saveSettings } from "@/features/settings/api/settings.api"
-import type { SettingsFormValues } from "@/features/settings/schemas/settings.schema"
+import { getSettings, saveSettings, type LoadedSettings } from "@/features/settings/api/settings.api"
 import type { ApiError } from "@/lib/api/errors"
 
 export const settingsKeys = {
@@ -9,7 +8,7 @@ export const settingsKeys = {
 }
 
 export function useSettings() {
-  return useQuery<SettingsFormValues, ApiError>({
+  return useQuery<LoadedSettings, ApiError>({
     queryKey: settingsKeys.details,
     queryFn: getSettings,
     refetchOnMount: "always",
@@ -18,8 +17,8 @@ export function useSettings() {
 
 export function useSaveSettings() {
   const queryClient = useQueryClient()
-  return useMutation<unknown, ApiError, SettingsFormValues>({
+  return useMutation<unknown, ApiError, LoadedSettings>({
     mutationFn: saveSettings,
-    onSuccess: (_data, values) => queryClient.setQueryData(settingsKeys.details, values),
+    onSuccess: (_data, saved) => queryClient.setQueryData(settingsKeys.details, saved),
   })
 }

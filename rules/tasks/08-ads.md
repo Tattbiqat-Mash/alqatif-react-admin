@@ -52,6 +52,8 @@ Screenshots: [`08-ad-edit-1.png`](screenshots/08-ad-edit-1.png) · [`08-ad-edit-
 | الحالة * | select | فعال / غير فعال |
 | التصنيف * | multi-select of categories | `categories`, sent comma-separated |
 
+> **Status:** built (`src/features/ads/`) with **provisional** list/details mappings (keys from the add body and getBanners rows). Add/edit body = collection; both `link` and `postId` are always sent, the unused one empty/0. Image upload uses the shared `uploadImageTo` (⚠ assumes the posts upload reply). Categories = news categories (type 0) for now. Verified on a local mock with agent-made data.
+
 ## Open questions (⚠ TBD)
 
 - Response shapes; whether "عدد مرات الظهور" in the list is total views or `requiredViews`.

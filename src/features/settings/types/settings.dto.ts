@@ -1,5 +1,9 @@
-/** Body of `POST /admin/settings/edit` (from the Postman collection). Every field is sent. */
-export type SettingsSaveRequestDto = {
+/**
+ * Body of `POST /admin/settings/edit`: the collection's 8 fields, plus the 4 fields that
+ * only `getDetails` shows, passed through unchanged so a save can never blank them
+ * (⚠ TBD whether `edit` reads them at all).
+ */
+export type SettingsSaveRequestDto = SettingsExtrasDto & {
   facebook: string
   twitter: string
   insta: string
@@ -29,6 +33,14 @@ export type SettingsDetailsDto = {
   about: string | null
   privacy: string | null
   info: string | null
+}
+
+/** Fields the form does not show but every save sends back as loaded. */
+export type SettingsExtrasDto = {
+  snapchat: string
+  telegram: string
+  tiktok: string
+  mobile: string
 }
 
 export type SettingsDetailsResponseDto = {

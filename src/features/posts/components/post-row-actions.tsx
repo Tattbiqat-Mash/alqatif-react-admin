@@ -23,21 +23,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { IconAction } from "@/components/ui/icon-action"
 import { contentEditHref, publicPostUrl, type ContentTypeConfig } from "@/config/content-types"
 import { useChangePostStatus, useDeletePost, useTogglePostPinned } from "@/features/posts/hooks/use-posts"
 import type { PostListItem, PostStatus } from "@/features/posts/types/posts.types"
 import { postStatus } from "@/lib/labels"
 import { messages } from "@/lib/messages"
-
-function IconAction({ label, children }: { label: string; children: React.ReactElement }) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
-  )
-}
 
 export function PostRowActions({ post, content }: { post: PostListItem; content: ContentTypeConfig }) {
   const changeStatus = useChangePostStatus()

@@ -1,14 +1,14 @@
 import type { Metadata } from "next"
 
 import { RequirePermission } from "@/components/layout/require-permission"
-import { ScreenPlaceholder } from "@/components/layout/screen-placeholder"
+import { NotificationsScreen } from "@/features/notifications/components/notifications-screen"
 
 export const metadata: Metadata = { title: "الإشعارات" }
 
-export default function Page() {
+export default function NotificationsPage() {
   return (
     <RequirePermission permission="allowNotifications">
-      <ScreenPlaceholder title="الإشعارات" task="10" />
+      <NotificationsScreen />
     </RequirePermission>
   )
 }

@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
 import { ErrorState, ForbiddenState } from "@/components/ui/states"
 import { Textarea } from "@/components/ui/textarea"
+import type { LoadedSettings } from "@/features/settings/api/settings.api"
 import { useSaveSettings, useSettings } from "@/features/settings/hooks/use-settings"
 import { settingsSchema, type SettingsFormValues } from "@/features/settings/schemas/settings.schema"
 import { messages } from "@/lib/messages"
@@ -32,14 +33,14 @@ const PAGES: { name: "about" | "privacy" | "info"; label: string }[] = [
   { name: "info", label: "معلومات" },
 ]
 
-function SettingsForm({ initial }: { initial: SettingsFormValues }) {
+function SettingsForm({ initial }: { initial: LoadedSettings }) {
   const save = useSaveSettings()
-  const form = useForm<SettingsFormValues>({ resolver: zodResolver(settingsSchema), defaultValues: initial })
+  const form = useForm<SettingsFormValues>({ resolver: zodResolver(settingsSchema), defaultValues: initial.values })
   const { register, handleSubmit, reset, formState } = form
   const { errors } = formState
 
   const onValid = (values: SettingsFormValues) =>
-    save.mutate(values, {
+    save.mutate({ values, extras: initial.extras }, {
       onSuccess: () => {
         toast.success(messages.toasts.saved)
         // The saved values become the new baseline for "تراجع".

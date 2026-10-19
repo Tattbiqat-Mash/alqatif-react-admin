@@ -180,6 +180,7 @@ Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 - `questions` on add: the collection shows both `answer1,answr2,answer3` and `[{"question":"aaaa"},…]` — ⚠ TBD which one the API accepts.
 - ⚠ `edit` spells the field `vaildHours` while `add` uses `validHours`. Confirm which one `/v2` reads before relying on either.
 - `active`: `0` غير فعال · `1` فعال.
+- `getDetails/{id}` → `{ status, data: [row] }` ([sample](api-samples/surveys-details.json)): `surveyId`, `categoryId` (not `id` / `catId`), `active`, `title`, `validDays`, **`vaildHours`**, `validMin` — all strings — and `answers`, a **JSON-encoded string** of `[{ id, answers, question }]` where `answers` is the votes count. A survey's category can be outside the active news categories (sample: `999` «تجريبي»).
 
 ## Settings — `admin/settings`
 

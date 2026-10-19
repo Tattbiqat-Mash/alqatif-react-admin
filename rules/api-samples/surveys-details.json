@@ -1,0 +1,15 @@
+{
+    "status": "success",
+    "data": [
+        {
+            "surveyId": "44",
+            "categoryId": "999",
+            "active": "0",
+            "title": "survey2",
+            "validDays": "10",
+            "vaildHours": "5",
+            "validMin": "30",
+            "answers": "[{\"id\": 82, \"answers\": 0, \"question\": \"3333سوال 1\"}, {\"id\": 83, \"answers\": 0, \"question\": \"سوال 2\"}]"
+        }
+    ]
+}

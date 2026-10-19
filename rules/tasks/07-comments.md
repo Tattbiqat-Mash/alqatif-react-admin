@@ -38,6 +38,8 @@ Screenshots: [`07-comment-edit.png`](screenshots/07-comment-edit.png) · [`07-co
 - Fields: التعليق * (textarea), الحالة * (select).
 - Footer: حفظ / تراجع.
 
+> **Status:** built (`src/features/comments/`) with **provisional** list/details mappings (`pickText` candidates, flagged in code). Edit body = collection (`id`, `comment`, `active`). The post title opens the post on the public site (the row has no content type). `?postId=` shows a removable chip. Verified on a local mock with agent-made data.
+
 ## Open questions (⚠ TBD)
 
 - Response shapes of `list` / `getDetails` (commenter name, post title and type for the link).

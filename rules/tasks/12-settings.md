@@ -46,7 +46,7 @@ One form in two cards:
 ## Open questions (⚠ TBD)
 
 - ✅ `settings/getDetails` shape.
-- `getDetails` also returns `snapchat`, `telegram`, `tiktok`, `mobile`: add them to the form? Does `edit` accept them, and does it leave them untouched when they are not sent?
+- `getDetails` also returns `snapchat`, `telegram`, `tiktok`, `mobile`. They are not in the form but **are sent back unchanged with every save**, so a save cannot blank them. Still open: should they be editable?
 
 - Are `about` / `privacy` / `info` plain text or HTML on the public site? (The old form uses plain textareas; current values are just ".")
 

@@ -42,12 +42,14 @@ Section 2 — "الإجابات" (the API calls them `questions`):
 
 Footer: حفظ / تراجع.
 
+> **Status:** built (`src/features/surveys/`) with a **provisional** list mapping; `getDetails` is mapped on the [sample](../api-samples/surveys-details.json). Create sends answers as `questions` comma-separated (commas inside an answer are rejected); edit sends both `validHours` and `vaildHours`; answers on the edit page save one by one (add/edit/delete). Categories = news categories (type 0) for now. Verified on a local mock with agent-made data.
+
 ## Open questions (⚠ TBD)
 
 - Format of `questions` on add (comma-separated vs. JSON array of `{question}`).
 - `edit` field name `vaildHours` vs `validHours` — test which one `/v2` updates.
 - Allowed ranges for days/hours/minutes; what "تاريخ ووقت النشر" is based on.
-- Which category types surveys use.
+- Which category types surveys use: the sample's `categoryId` 999 («تجريبي» in the old admin) is not among the active news categories, so it shows as «تصنيف رقم 999».
 
 ## Acceptance criteria
 

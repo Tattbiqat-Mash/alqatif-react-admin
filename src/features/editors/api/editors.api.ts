@@ -1,8 +1,7 @@
 import { endpoints } from "@/config/endpoints"
 import { apiGet, apiPost } from "@/lib/api/client"
-import { ApiError } from "@/lib/api/errors"
 import { normalizeList, toApiPage, type ListEnvelopeDto, type ListResult } from "@/lib/api/list"
-import { toArray, toNumber, toText } from "@/lib/api/parse"
+import { toArray, toNumber, toText, unreadableDetails } from "@/lib/api/parse"
 import { ADMIN_PERMISSIONS } from "@/features/auth/types/auth.types"
 import type { EditorFormValues } from "@/features/editors/schemas/editor.schema"
 import type {
@@ -82,11 +81,7 @@ export function mapEditorDetails(raw: unknown): { id: number; values: EditorForm
   const dto = (typeof data === "object" && data !== null ? data : root) as EditorDetailsDto
   const id = toNumber(dto?.id, Number.NaN)
   if (!Number.isFinite(id) || typeof dto.userName !== "string") {
-    throw new ApiError({
-      statusCode: 404,
-      message: "تعذر قراءة بيانات المحرر من الخادم.",
-      serverMessage: "admins/getDetails: unexpected shape (mapping is ⚠ TBD)",
-    })
+    throw unreadableDetails(raw, "admins/getDetails", "تعذر قراءة بيانات المحرر من الخادم.")
   }
   return {
     id,

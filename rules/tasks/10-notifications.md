@@ -24,6 +24,8 @@ Screenshots: [`10-notifications.png`](screenshots/10-notifications.png)
 - "إرسال" (primary, `Send` icon) opens a confirm dialog: "سيتم إرسال الإشعار «{title}» لجميع مستخدمي التطبيق. متابعة؟"
 - On success: toast "تم إرسال الإشعار", reset the form. "تراجع" goes to `/dashboard`.
 
+> **Status:** built (`src/features/notifications/`): title + message + type shown as "عام"; sends `type=0&topic=all` (no `catId`), after a confirm dialog; limits 100 / 500 chars are the app's own. Verified on a local mock.
+
 ## Open questions (⚠ TBD)
 
 - All values of `type` and their labels (only "عام" is visible in the old form).
