@@ -112,3 +112,9 @@ React Hook Form + Zod for every form. Every form shows field errors under the fi
 ## Deployment
 
 ⚠ TBD — hosting target not decided. Until it is, the app only needs `pnpm build` to pass; avoid platform-specific APIs.
+## Deployment (Cloudflare Workers via OpenNext)
+
+- Config: `open-next.config.ts`, `wrangler.jsonc` (`nodejs_compat`, assets in `.open-next/assets`).
+- Scripts: `pnpm dev`, `pnpm build` (Next build), `pnpm cf:build`, `pnpm preview`, `pnpm deploy`.
+- `.open-next/` and `.wrangler/` are git-ignored.
+- Avoid Node-only APIs that are not covered by `nodejs_compat`.
