@@ -1,0 +1,22 @@
+{
+  "status": "success",
+  "rowsCount": 3979,
+  "data": [
+    { "authorName": "سناء آل حسين - القطيف اليوم" },
+    { "authorName": "القطيف اليوم" },
+    { "authorName": " القطيف اليوم" },
+    { "authorName": "اللجنة الإعلامية - سيهات" },
+    { "authorName": "ليالي الفرج" },
+    { "authorName": "منير النمر - الرياض" },
+    { "authorName": "محمد محفوظ" },
+    { "authorName": "الُقًطِيَفَ الُيَوَمٌ" },
+    { "authorName": "خالد السنان - القطيفـاليوم" },
+    { "authorName": "خالد السنان - القطيف اليوم" },
+    { "authorName": "القطيف اليوم - واس" },
+    { "authorName": " اللجنة الإعلامية" },
+    { "authorName": "اللجنة الإعلامية" },
+    { "authorName": "‏علي آل محسن - القطيف اليوم" },
+    { "authorName": "علي آل محسن - القطيف اليوم" }
+  ],
+  "_note": "Trimmed by the agent: the real response has 3979 rows in one page (no pagesCount); names include leading spaces, invisible marks (U+200F) and near-duplicates."
+}

@@ -1,0 +1,37 @@
+{
+  "status": "success",
+  "todaySummary": {
+    "todayNews": "0",
+    "todayViews": "0",
+    "todayVistores": "0"
+  },
+  "topCategories": [
+    { "totalViews": "3191039", "title": "وفيات" },
+    { "totalViews": "633026", "title": "محليات" },
+    { "totalViews": "404415", "title": "أخبارهم" },
+    { "totalViews": "394183", "title": "اعلانات" },
+    { "totalViews": "141349", "title": "ادب و رأى" },
+    { "totalViews": "66932", "title": "فعاليات" },
+    { "totalViews": "17267", "title": "الوطن" },
+    { "totalViews": "294", "title": "فيديوهات" },
+    { "totalViews": "60", "title": "وظائف" },
+    { "totalViews": "25", "title": "مفقودات وموجودات" },
+    { "totalViews": "0", "title": "صور" },
+    { "totalViews": "0", "title": "تجريبي" },
+    { "totalViews": "0", "title": "رسائل شكر" }
+  ],
+  "topPosts": [
+    { "title": "القديح: الحاج عبدالكريم جعفر صالح آل سلام في ذمة الله", "categoryTitle": "وفيات", "views": "125139" },
+    { "title": "القديح: الحاج سعيد جعفر صالح آل سلام في ذمة الله", "categoryTitle": "وفيات", "views": "113426" },
+    { "title": "تاروت - المناخ: الشاب محمد محسن محمد عبدالله عوجان في ذمة الله", "categoryTitle": "وفيات", "views": "78666" },
+    { "title": "القطيف - مياس: الشابة يسرى إبراهيم خليل مال الله في ذمة الله", "categoryTitle": "وفيات", "views": "74227" },
+    { "title": "في القديح.. وفاة الشقيقين آل سلام بحادث صعق كهربائي مؤسف", "categoryTitle": "محليات", "views": "68252" },
+    { "title": "العوامية : الشاب مهدي حسن أحمد علي العوكار في ذمة الله", "categoryTitle": "وفيات", "views": "58982" },
+    { "title": "تاروت - الدشة: الحاج علي عبدالله عبدالله الزوري في ذمة الله", "categoryTitle": "وفيات", "views": "58231" },
+    { "title": "أم الحمام: الشاب محمد مسبح علي المسبح في ذمة الله", "categoryTitle": "وفيات", "views": "58128" },
+    { "title": "تاروت: الحاجة صباح معتوق منصور تركي الصديق في ذمة الله", "categoryTitle": "وفيات", "views": "56360" },
+    { "title": "الملاحة: الطفلة فاطمة محمد عبدالله آل شعيب في ذمة الله", "categoryTitle": "وفيات", "views": "54121" }
+  ],
+  "topWeekDays": [{ "totalViews": "0", "dayname": "" }],
+  "monthDays": [{ "totalViews": "0", "openDate": "" }]
+}

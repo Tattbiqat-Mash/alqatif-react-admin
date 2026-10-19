@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "rowsCount": 7,
+  "pagesCount": 1,
+  "data": [
+    { "id": 82, "type": 0, "title": "الوطن", "notificationTopic": "quick_topic", "active": 1 },
+    { "id": 70, "type": 0, "title": "أخبارهم", "notificationTopic": "news_topic", "active": 1 },
+    { "id": 60, "type": 0, "title": "ادب و رأى", "notificationTopic": "art_topic", "active": 1 },
+    { "id": 59, "type": 0, "title": "اعلانات", "notificationTopic": "ads_topic", "active": 1 },
+    { "id": 56, "type": 0, "title": "وفيات", "notificationTopic": "deaths_topic", "active": 1 },
+    { "id": 55, "type": 0, "title": "محليات", "notificationTopic": "local_topic", "active": 1 },
+    { "id": 1, "type": 0, "title": "فعاليات", "notificationTopic": "events_topic", "active": 1 }
+  ]
+}

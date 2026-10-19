@@ -1,0 +1,13 @@
+{
+  "status": "success",
+  "pages": 1760,
+  "files": [
+    "https://alqhat.com/uploadImages/medium/9606524100662.jpeg",
+    "https://alqhat.com/uploadImages/medium/7452872900437.jpeg",
+    "https://alqhat.com/uploadImages/medium/f7a90be4-f08d-48cd-843c-81215517ffa9.jpeg",
+    "https://alqhat.com/uploadImages/medium/02b85df6-c26e-425e-bd1c-231d2d4bfe34.jpeg",
+    "https://alqhat.com/uploadImages/medium/3425676500850.jpg",
+    "https://alqhat.com/uploadImages/medium/IMG-20261017-WA0003.jpg"
+  ],
+  "_note": "Trimmed by the agent: the real page has 40 files. Called as listImages/1 → page 1 is the newest (the image just uploaded comes first)."
+}

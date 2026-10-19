@@ -1,0 +1,176 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * Light mode only. `dark:` utilities in shadcn components stay inert because no
+ * element ever gets the `.dark` class — without this line Tailwind would apply
+ * them from the OS `prefers-color-scheme`.
+ */
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Surfaces and text */
+  --background: #f5f8fa;
+  --surface: #ffffff;
+  --surface-muted: #f9fafb;
+  --border: #e4e6ef;
+  --foreground: #181c32;
+  --muted-text: #5e6278;
+  --subtle-text: #a1a5b7;
+
+  /* Brand: primary (amber) — never white text on it */
+  --primary: #ffa800;
+  --primary-hover: #e69700;
+  --primary-muted: #fff4de;
+  --primary-foreground: #1e1e2d;
+  --primary-ink: #9a6200;
+
+  /* Semantic. `danger` is the brand accent #f1416c. */
+  --success: #50cd89;
+  --success-muted: #e8fff3;
+  --success-ink: #0f7a4a;
+  --warning: #ffa800;
+  --warning-muted: #fff4de;
+  --warning-ink: #9a6200;
+  --danger: #f1416c;
+  --danger-muted: #fff5f8;
+  --danger-ink: #d1184a;
+  --info: #3e97ff;
+  --info-muted: #eef6ff;
+  --info-ink: #1a5fc0;
+  --neutral: #a1a5b7;
+  --neutral-muted: #f1f1f4;
+  --neutral-ink: #5e6278;
+
+  /* Sidebar */
+  --sidebar: #1e1e2d;
+  --sidebar-foreground: #a2a3b7;
+  --sidebar-accent: #1b1b28;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-primary: #ffa800;
+  --sidebar-primary-foreground: #1e1e2d;
+  --sidebar-border: #2b2b40;
+  --sidebar-ring: #ffa800;
+
+  /* shadcn variables mapped onto the tokens above */
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--neutral-muted);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-muted);
+  --muted-foreground: var(--muted-text);
+  --accent: #f4f5f8;
+  --accent-foreground: var(--foreground);
+  --destructive: var(--danger-ink);
+  --input: var(--border);
+  --ring: var(--primary);
+  /* Bars: a darker step of the primary amber — #FFA800 is 1.9:1 on white, below the 3:1 a mark needs (dataviz validator). */
+  --chart-1: #c27e00;
+  --chart-2: var(--danger);
+  --chart-3: var(--info);
+  --chart-4: var(--success);
+  --chart-5: var(--neutral);
+
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --font-sans: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-muted-text: var(--muted-text);
+  --color-subtle-text: var(--subtle-text);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-muted: var(--primary-muted);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-ink: var(--primary-ink);
+
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-success-ink: var(--success-ink);
+  --color-warning: var(--warning);
+  --color-warning-muted: var(--warning-muted);
+  --color-warning-ink: var(--warning-ink);
+  --color-danger: var(--danger);
+  --color-danger-muted: var(--danger-muted);
+  --color-danger-ink: var(--danger-ink);
+  --color-info: var(--info);
+  --color-info-muted: var(--info-muted);
+  --color-info-ink: var(--info-ink);
+  --color-neutral: var(--neutral);
+  --color-neutral-muted: var(--neutral-muted);
+  --color-neutral-ink: var(--neutral-ink);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --animate-fetching-bar: fetching-bar 1.1s ease-in-out infinite;
+  @keyframes fetching-bar {
+    /* RTL: the bar travels from the inline start (right) to the left. */
+    from {
+      transform: translateX(300%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

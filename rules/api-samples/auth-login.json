@@ -1,0 +1,25 @@
+{
+  "status": "success",
+  "token": "<token>",
+  "data": {
+    "id": 12,
+    "userName": "Mash3",
+    "password": "<md5 hash — REDACTED; the API should not return this>",
+    "displayName": "Mohamed Ahmed",
+    "user_nicename": "",
+    "email": "m1m@mm.com1",
+    "registerdDate": "2022-01-11 15:31:37",
+    "type": 0,
+    "allwoedCats": "1,2",
+    "permissions": 2,
+    "active": 1,
+    "updatedBy": null,
+    "allowPosts": null,
+    "allowComments": null,
+    "allowAds": null,
+    "allowAdmins": null,
+    "allowNotifications": null,
+    "allowSurveys": null,
+    "allowSettings": null
+  }
+}
