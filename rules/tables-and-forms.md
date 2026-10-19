@@ -16,7 +16,7 @@ Page shape:
 </div>
 ```
 
-The feature component that reads the URL is wrapped in `<Suspense>` in `page.tsx` (Cache Components — see [architecture.md](architecture.md#nextjs-16-notes)).
+The feature component that reads the URL is wrapped in `<Suspense>` in `page.tsx` (see [architecture.md](architecture.md#nextjs-16-notes)).
 
 ### `DataTable` (`@/components/ui/data-table`, built in Task 03)
 

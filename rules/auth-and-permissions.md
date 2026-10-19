@@ -22,7 +22,7 @@ Response (confirmed from [api-samples/auth-login.json](api-samples/auth-login.js
 - On boot, `AuthProvider` loads the session. If the JWT has an `exp` claim and it has passed, treat it as signed out.
 - There is no refresh endpoint. Any `401` from an authenticated call ends the session: the client's unauthorized handler clears storage; `AuthProvider` clears the query cache when the status becomes `signed-out`; the admin guard redirects to `/login?redirect=<current path>`.
 - The token getter and the unauthorized handler are registered at module load in `auth-provider.tsx`, not in an effect (child effects run first, so early queries would go out without the token).
-- Do not call `usePathname()` / `useSearchParams()` in root-level providers — under Cache Components they make every dynamic route suspend. `/login` reads `?redirect=` from `window.location` at submit time.
+- Do not call `usePathname()` / `useSearchParams()` in root-level providers — they would make every route under the provider suspend (client-side bailout). `/login` reads `?redirect=` from `window.location` at submit time.
 - Logout (user menu "خروج"): clear storage and the query cache, go to `/login`. There is no logout endpoint.
 - Never render or log the token or password.
 

@@ -22,7 +22,7 @@ Search for something that already does the job before writing anything new:
 
 Then read the rule files that match the task (see the index in [README.md](README.md)).
 
-Before writing Next.js code, check the relevant guide in `node_modules/next/dist/docs/` — this is Next.js 16 with Cache Components; APIs differ from older versions (see [architecture.md](architecture.md#nextjs-16-notes)).
+Before writing Next.js code, check the relevant guide in `node_modules/next/dist/docs/` — this is Next.js 16; APIs differ from older versions (see [architecture.md](architecture.md#nextjs-16-notes)).
 
 ## 3. Plan (non-trivial tasks)
 

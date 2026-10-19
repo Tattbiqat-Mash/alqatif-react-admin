@@ -2,7 +2,7 @@
 
 ## Stack
 
-Next.js 16.4 (App Router, Turbopack, `cacheComponents` + `partialPrefetching` on) · React 19.3 · TypeScript (strict) · Tailwind CSS v4 · pnpm. Added in [Task 01](tasks/01-project-setup.md):
+Next.js 16.4 (App Router, Turbopack; `cacheComponents` off — see [Deployment](#deployment-cloudflare-workers-via-opennext)) · React 19.3 · TypeScript (strict) · Tailwind CSS v4 · pnpm. Added in [Task 01](tasks/01-project-setup.md):
 
 | Package | Use |
 |---|---|
@@ -62,10 +62,9 @@ The token lives in the browser (see [auth-and-permissions.md](auth-and-permissio
 
 Read the matching guide in `node_modules/next/dist/docs/01-app/` before using any Next API. The points that bite most often here:
 
-- **Cache Components is on.** Any client component that reads `useSearchParams()` (including every `nuqs` hook) or `useParams()` must render inside a `<Suspense>` boundary, otherwise the build fails with a blocking-prerender error. Put the boundary in `page.tsx` around the feature component, with a skeleton fallback.
+- Any client component that reads `useSearchParams()` (including every `nuqs` hook) or `useParams()` must render inside a `<Suspense>` boundary, otherwise prerendering bails out (or the build fails). Put the boundary in `page.tsx` around the feature component, with a skeleton fallback.
 - `params` and `searchParams` passed to pages and layouts are **Promises**. In this project, read them on the client with `useParams()` / `nuqs` instead.
 - Use the global `PageProps<"/route">` and `LayoutProps<"/route">` helper types for page/layout props.
-- **`instant = false` on `src/app/(admin)/layout.tsx`.** The session is browser-only, so on the server `AuthGuard` renders a loader instead of the page and the dev overlay reported every admin page as a "dropped segment" (instant-navigation validation). The admin area is opted out; do not remove it, and do not add `instant = true` to admin pages. `/login` and other public routes still validate.
 - Middleware is now `proxy.ts`. This project does not need one.
 - `next/font/google` for fonts, `next/image` for local images (`public/logo.jpeg`). Images from the API domain are shown with a plain `<img>` unless the domain is added to `images.remotePatterns`.
 
@@ -109,12 +108,12 @@ React Hook Form + Zod for every form. Every form shows field errors under the fi
 - No secrets in client code. Never log tokens or passwords.
 - Post content is legacy HTML. Never render API HTML with `dangerouslySetInnerHTML` outside the editor; titles and comments render as text.
 
-## Deployment
-
-⚠ TBD — hosting target not decided. Until it is, the app only needs `pnpm build` to pass; avoid platform-specific APIs.
 ## Deployment (Cloudflare Workers via OpenNext)
 
 - Config: `open-next.config.ts`, `wrangler.jsonc` (`nodejs_compat`, assets in `.open-next/assets`).
 - Scripts: `pnpm dev`, `pnpm build` (Next build), `pnpm cf:build`, `pnpm preview`, `pnpm deploy`.
 - `.open-next/` and `.wrangler/` are git-ignored.
 - Avoid Node-only APIs that are not covered by `nodejs_compat`.
+- **Do not enable `cacheComponents` / `partialPrefetching`** (nor `"use cache"`, `instant`, `cacheLife`, which need it). Next.js warns it "cannot guarantee that Cache Components will run as expected due to the current runtime's implementation of `setTimeout()`", and on workerd every rendered request hangs → Cloudflare error 1101. Re-test with `pnpm preview` before turning it back on.
+- `observability.logs` is enabled in `wrangler.jsonc` so runtime exceptions show up in the Cloudflare dashboard.
+- OpenNext does not build reliably on native Windows with pnpm's symlinked `node_modules` ("Access is denied" under `.open-next/`). Build in WSL or CI (production is built by Cloudflare Workers Builds).

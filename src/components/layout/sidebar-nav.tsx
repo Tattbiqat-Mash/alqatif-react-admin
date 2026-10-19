@@ -166,7 +166,7 @@ function NavWithPathname(props: NavProps) {
 }
 
 /**
- * usePathname() suspends on routes with dynamic params under Cache Components, so it
+ * usePathname() suspends on dynamic-param routes when Cache Components is on, so it
  * sits behind its own boundary; the fallback is the same list without an active item.
  */
 export function SidebarNav(props: NavProps) {
