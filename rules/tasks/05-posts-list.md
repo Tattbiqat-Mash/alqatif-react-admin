@@ -77,7 +77,7 @@ Confirm the API's paging (page size, total / last page) on this list and finish 
 
 ## Open questions (⚠ TBD)
 
-- Response shape of `posts/list` (fields for editor name, writer, category title, views, date).
+- ✅ Response shape of `posts/list` — [sample](../api-samples/posts-list.json).
 - Category ids 79 / 80 / 81 on `/v2`.
 - Whether "كل حالات العرض" maps to `fixed` (or to `orderCase`); what `orderCase` values do.
 - Public link format for "مشاهدة الخبر" (`/q/<id>` is seen in an ad link).

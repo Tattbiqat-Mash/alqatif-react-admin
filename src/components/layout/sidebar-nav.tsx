@@ -144,7 +144,7 @@ function NavList({ pathname, collapsed, onNavigate }: NavProps & { pathname: str
   const visible = NAV.filter((entry: NavEntry) => !entry.permission || can(entry.permission))
 
   return (
-    <nav aria-label="القائمة الرئيسية" className="flex-1 overflow-y-auto px-3 py-4">
+    <nav aria-label="القائمة الرئيسية" className="sidebar-scrollbar min-h-0 flex-1 overflow-y-auto px-1.5 py-4">
       <ul className="flex flex-col gap-1">
         {visible.map((entry) => (
           <li key={entry.label}>

@@ -55,16 +55,17 @@ Pick the editor before building the form, and get the user's OK on the choice. R
 - RTL, Arabic, works with React 19.
 - **Round-trips the existing HTML** of old posts without stripping tags, attributes, or WordPress shortcodes such as `[banner caption_position="bottom" …]` (seen in video posts). Test with the `content` of 3 real posts from the user's samples before committing to it.
 - Toolbar parity with the old CKEditor: bold, italic, underline, strike, clear format, link/unlink, lists, indent, quote, horizontal rule, table, alignment, text colour, font size, image (upload / from gallery), source-code view, full screen.
+- Images inside the content (built): Jodit's "image" button inserts by URL only; two custom toolbar buttons — "رفع صورة من الجهاز" (one or more files through `posts/uploadImage`, progress overlay) and "إدراج من معرض الصور" (the `listImages` dialog in multi-select mode: numbered picks kept across pages, inserted in pick order) — insert `<img src="{full URL}" style="max-width:100%;height:auto">` at the cursor.
 - Candidates: CKEditor 5 (General HTML Support keeps unknown markup) or TipTap (needs extensions to preserve unknown HTML). Record the decision in [architecture.md](../architecture.md#stack).
 
 ## Open questions (⚠ TBD)
 
 - ✅ `getDetails` — [sample](../api-samples/posts-details.json); `data` is a one-item array; legacy plain-text content handled (see api-endpoints.md#posts--adminposts).
-- `uploadImage` / `listImages` responses: what value goes into `mainImage`, how the gallery pages.
-- Khatma fields: the collection has them but no screenshot shows them. When are they shown (only for the deaths category?), and is `getKhtmat` needed in the form?
+- ✅ `uploadImage` / `listImages` — samples in `api-samples/`; `mainImage` holds the full URL (`filePath/fileName`); `listImages/{page}` is 1-based.
+- ✅ Khatma fields show only for the وفيات category (user's decision). Still open: is `getKhtmat` needed in the form?
 - Photo posts: is `content` really unused, and is `uploadMultipleImages` meant for a photo gallery inside the post?
 - **Edit lock — DEFERRED by the user (2026-10-19), revisit before release.** Today: `editorOpen` / `editorName` from `getDetails` show a non-blocking warning when another admin has the post open; the app does not claim or release the lock. Proposed (option 1): call `changePostEditor` (`id`) when the edit page opens and `freePostEditor` (`id`) on save / تراجع / navigating away; keep it a warning, never a block — locks go stale when a tab is closed (post 1171 from 2016 still shows `editorOpen: 12`). Needs the two responses from Postman first.
-- Default status on create.
+- ✅ Default status on create: تحت المراجعة (`active` 0, user's decision).
 - `sendPostNotification/{id}` — is it a separate action, or is `sendNotification=1` on save enough?
 
 ## Out of scope

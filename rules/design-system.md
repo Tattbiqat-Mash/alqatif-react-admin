@@ -83,17 +83,18 @@ In RTL the sidebar sits on the right (the inline-start side). Use logical proper
 ### Sidebar (`src/components/layout/sidebar.tsx`)
 
 - Background `bg-sidebar`, full height, fixed.
-- **Top:** the logo (`/logo.jpeg`, 40×40, `rounded-md`) and the name "القطيف اليوم" (hidden when collapsed), plus the collapse button.
+- **Top:** the logo (`/logo.jpeg`, 40×40, `rounded-md`) and the name "القطيف اليوم" (hidden when collapsed), plus the collapse button. When collapsed there is no separate button: the logo itself is the expand button ("توسيع القائمة" tooltip) and swaps to the `PanelRightOpen` icon on hover/focus.
 - **States:** expanded `w-64` and collapsed `w-20` (icons only). The choice is remembered in `localStorage.sidebar_collapsed` (inside `try/catch`). Below `lg` the sidebar is a drawer (shadcn `Sheet`, `side="right"` because the start side in RTL is the right) opened from a menu button in the header; the drawer is always expanded.
 - **Items** (from `src/config/nav.ts`, filtered by permission): الرئيسية · المحتوى (accordion: الأخبار، الفيديوهات، الصور، وظائف، رسائل شكر، مفقودات وموجودات) · التعليقات · الإعلانات · المحررين · الاشعارات · الاستبيانات · الاعدادات العامة.
 - Item: icon + label, `text-sidebar-foreground`, hover `bg-sidebar-accent text-sidebar-accent-foreground`. Active item: `bg-sidebar-accent text-sidebar-accent-foreground` with the icon in `text-sidebar-primary` and a 3px `bg-primary` bar on the inline-start edge.
 - **Accordion (المحتوى):** opens on click; open automatically when the current route is one of its children. Chevron rotates when open. Sub-items are indented with a small dot instead of an icon.
 - **Collapsed:** labels hidden, tooltips (shadcn `Tooltip`, on the inline-end side) show the label; المحتوى opens its children in a popover menu instead of expanding inline.
+- The item list scrolls on its own with the `sidebar-scrollbar` utility (`globals.css`): a thin scrollbar in `--primary` at 40% opacity (70% while hovered), with its gutter reserved on both edges so items never shift.
 - Every icon-only control has an `aria-label`.
 
 ### Header (`src/components/layout/header.tsx`)
 
-- `bg-surface border-b border-border h-16`, sticky.
+- `bg-surface border-b border-border h-16`, always visible: the shell is exactly one screen tall (`h-svh`) and only `<main>` scrolls, never the window. Anything that must follow scrolling (e.g. the editor toolbar) uses CSS `sticky` inside `<main>`, not window scroll listeners.
 - Start: menu button (below `lg` only). The page title is not repeated here — it lives in the page header.
 - End (the left side in RTL): "مرحباً، {displayName}" + avatar (image, or the first letter on `bg-primary-muted text-primary-ink`) + chevron-down. Clicking opens a dropdown (shadcn `DropdownMenu`) with: avatar, display name, email, a separator, and "خروج" (`LogOut` icon, `text-danger-ink`).
 

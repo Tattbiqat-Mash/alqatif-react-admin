@@ -112,6 +112,37 @@ function EnumSelect<V extends number>({
   )
 }
 
+/**
+ * The gallery opened from the editor's toolbar. The chosen image is inserted only after the
+ * dialog has closed, so its focus trap cannot move the editor's cursor.
+ */
+function useContentGallery() {
+  const [isOpen, setIsOpen] = React.useState(false)
+  const insert = React.useRef<((url: string) => void) | null>(null)
+  const picked = React.useRef<string[]>([])
+  return {
+    open: React.useCallback((next: (url: string) => void) => {
+      insert.current = next
+      picked.current = []
+      setIsOpen(true)
+    }, []),
+    pick: (values: string[]) => {
+      picked.current = values.map((value) => imageUrl(value) ?? value)
+    },
+    dialogProps: {
+      open: isOpen,
+      onOpenChange: setIsOpen,
+      onCloseAutoFocus: (event: Event) => {
+        // The editor takes focus back itself when it inserts.
+        event.preventDefault()
+        for (const url of picked.current) insert.current?.(url)
+        picked.current = []
+        insert.current = null
+      },
+    },
+  }
+}
+
 type PostFormProps = {
   content: ContentTypeConfig
   /** null = create. */
@@ -129,6 +160,8 @@ export function PostForm({ content, postId, defaultValues, meta }: PostFormProps
   const listHref = contentHref(content.slug)
   const save = useSavePost(content, postId)
   const upload = useUploadPostImage()
+  const contentUpload = useUploadPostImage()
+  const contentGallery = useContentGallery()
   const categories = useCategories(content.type, { enabled: show.categorySelect })
   const writers = useAuthorNames()
 
@@ -266,32 +299,37 @@ export function PostForm({ content, postId, defaultValues, meta }: PostFormProps
           )}
 
           {show.editor && (
-            <FormField
-              id="content"
-              label={content.type === 1 ? "المحتوى (رابط الفيديو والوصف)" : "المحتوى"}
-              hint={
-                meta?.legacyText
-                  ? "خبر قديم بصيغة نصية: تُعرض الأسطر كما هي، ويُحفظ المحتوى دون تغيير ما لم تعدّله."
-                  : undefined
-              }
-            >
-              {(field) => (
-                <Controller
-                  control={control}
-                  name="content"
-                  render={({ field: f }) => (
-                    <RichTextEditor
-                      id={field.id}
-                      preserveLineBreaks={meta?.legacyText}
-                      value={f.value}
-                      onChange={f.onChange}
-                      onBlur={f.onBlur}
-                      aria-invalid={field["aria-invalid"]}
-                    />
-                  )}
-                />
-              )}
-            </FormField>
+            <>
+              <FormField
+                id="content"
+                label={content.type === 1 ? "المحتوى (رابط الفيديو والوصف)" : "المحتوى"}
+                hint={
+                  meta?.legacyText
+                    ? "خبر قديم بصيغة نصية: تُعرض الأسطر كما هي، ويُحفظ المحتوى دون تغيير ما لم تعدّله."
+                    : undefined
+                }
+              >
+                {(field) => (
+                  <Controller
+                    control={control}
+                    name="content"
+                    render={({ field: f }) => (
+                      <RichTextEditor
+                        id={field.id}
+                        preserveLineBreaks={meta?.legacyText}
+                        value={f.value}
+                        onChange={f.onChange}
+                        onBlur={f.onBlur}
+                        uploadImage={(file, onProgress) => contentUpload.mutateAsync({ file, onProgress })}
+                        pickImage={contentGallery.open}
+                        aria-invalid={field["aria-invalid"]}
+                      />
+                    )}
+                  />
+                )}
+              </FormField>
+              <ImageGalleryDialog value="" multiple onPick={contentGallery.pick} {...contentGallery.dialogProps} />
+            </>
           )}
 
           <div className="grid gap-6 lg:grid-cols-2">
@@ -463,7 +501,7 @@ export function PostForm({ content, postId, defaultValues, meta }: PostFormProps
           )}
 
           <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
-            <Button type="submit" size="lg" disabled={save.isPending || upload.isPending}>
+            <Button type="submit" size="lg" disabled={save.isPending || upload.isPending || contentUpload.isPending}>
               {save.isPending && <Spinner />}
               {save.isPending ? messages.states.saving : messages.actions.save}
             </Button>

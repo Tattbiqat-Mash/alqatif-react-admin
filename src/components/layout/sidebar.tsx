@@ -33,9 +33,8 @@ function Brand({ collapsed }: { collapsed: boolean }) {
   )
 }
 
-function CollapseButton({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
-  const label = collapsed ? "توسيع القائمة" : "طي القائمة"
-  const Icon = collapsed ? PanelRightOpenIcon : PanelRightCloseIcon
+function CollapseButton({ onToggle }: { onToggle: () => void }) {
+  const label = "طي القائمة"
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -43,10 +42,44 @@ function CollapseButton({ collapsed, onToggle }: { collapsed: boolean; onToggle:
           type="button"
           onClick={onToggle}
           aria-label={label}
-          aria-expanded={!collapsed}
+          aria-expanded
           className="flex size-9 shrink-0 items-center justify-center rounded-md text-sidebar-foreground outline-none transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring [&_svg]:size-5"
         >
-          <Icon aria-hidden />
+          <PanelRightCloseIcon aria-hidden />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="left" sideOffset={8}>
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+/** Collapsed sidebar: the logo itself expands it, and turns into the expand icon on hover/focus. */
+function ExpandLogoButton({ onToggle }: { onToggle: () => void }) {
+  const label = "توسيع القائمة"
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={label}
+          aria-expanded={false}
+          className="group/expand relative flex size-10 shrink-0 items-center justify-center rounded-md text-sidebar-foreground outline-none transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+        >
+          <Image
+            src="/logo.jpeg"
+            alt=""
+            width={40}
+            height={40}
+            className="size-10 rounded-md transition-opacity group-hover/expand:opacity-0 group-focus-visible/expand:opacity-0 motion-reduce:transition-none"
+            priority
+          />
+          <PanelRightOpenIcon
+            aria-hidden
+            className="absolute size-5 opacity-0 transition-opacity group-hover/expand:opacity-100 group-focus-visible/expand:opacity-100 motion-reduce:transition-none"
+          />
         </button>
       </TooltipTrigger>
       <TooltipContent side="left" sideOffset={8}>
@@ -67,12 +100,18 @@ export function DesktopSidebar({ collapsed, onToggle }: { collapsed: boolean; on
     >
       <div
         className={cn(
-          "flex shrink-0 border-b border-sidebar-border px-3",
-          collapsed ? "flex-col items-center gap-2 py-3" : "h-16 items-center justify-between gap-2",
+          "flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border px-3",
+          collapsed ? "justify-center" : "justify-between",
         )}
       >
-        <Brand collapsed={collapsed} />
-        <CollapseButton collapsed={collapsed} onToggle={onToggle} />
+        {collapsed ? (
+          <ExpandLogoButton onToggle={onToggle} />
+        ) : (
+          <>
+            <Brand collapsed={false} />
+            <CollapseButton onToggle={onToggle} />
+          </>
+        )}
       </div>
       <SidebarNav collapsed={collapsed} />
     </aside>
