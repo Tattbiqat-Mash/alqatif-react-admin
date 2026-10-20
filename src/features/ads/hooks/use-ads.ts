@@ -19,6 +19,7 @@ import type { AdFormValues } from "@/features/ads/schemas/ad.schema"
 import type { ApiError } from "@/lib/api/errors"
 import type { ListResult } from "@/lib/api/list"
 import { messages } from "@/lib/messages"
+import { useRememberListUrl } from "@/lib/list-return"
 
 export const adKeys = {
   all: ["ads"] as const,
@@ -36,6 +37,7 @@ const parsers = {
 
 export function useAdFilters() {
   const [state, setState] = useQueryStates(parsers, { history: "replace" })
+  useRememberListUrl()
   const filters: AdListFilters = {
     page: Math.max(1, state.page),
     search: state.q,

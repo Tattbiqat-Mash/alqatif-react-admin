@@ -22,6 +22,7 @@ import type { SurveyFormValues } from "@/features/surveys/schemas/survey.schema"
 import type { ApiError } from "@/lib/api/errors"
 import type { ListResult } from "@/lib/api/list"
 import { messages } from "@/lib/messages"
+import { useRememberListUrl } from "@/lib/list-return"
 
 export const surveyKeys = {
   all: ["surveys"] as const,
@@ -38,6 +39,7 @@ const parsers = {
 
 export function useSurveyFilters() {
   const [state, setState] = useQueryStates(parsers, { history: "replace" })
+  useRememberListUrl()
   const filters: SurveyListFilters = {
     page: Math.max(1, state.page),
     search: state.q,

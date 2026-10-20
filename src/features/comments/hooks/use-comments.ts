@@ -16,6 +16,7 @@ import {
 import type { ApiError } from "@/lib/api/errors"
 import type { ListResult } from "@/lib/api/list"
 import { messages } from "@/lib/messages"
+import { useRememberListUrl } from "@/lib/list-return"
 
 export const commentKeys = {
   all: ["comments"] as const,
@@ -34,6 +35,7 @@ const parsers = {
 
 export function useCommentFilters() {
   const [state, setState] = useQueryStates(parsers, { history: "replace" })
+  useRememberListUrl()
   const filters: CommentListFilters = {
     page: Math.max(1, state.page),
     search: state.q,

@@ -3,6 +3,7 @@
 import { parseAsInteger, parseAsNumberLiteral, parseAsString, useQueryStates } from "nuqs"
 
 import type { PostListFilters, PostStatus } from "@/features/posts/types/posts.types"
+import { useRememberListUrl } from "@/lib/list-return"
 
 const STATUS_VALUES = [0, 1, 2] as const satisfies readonly PostStatus[]
 
@@ -19,6 +20,7 @@ const parsers = {
 /** List filters in the URL (`?page=2&q=…&status=1&pinned=0`) so a view survives reload and can be shared. */
 export function usePostFilters() {
   const [state, setState] = useQueryStates(parsers, { history: "replace" })
+  useRememberListUrl()
 
   const filters: PostListFilters = {
     page: Math.max(1, state.page),

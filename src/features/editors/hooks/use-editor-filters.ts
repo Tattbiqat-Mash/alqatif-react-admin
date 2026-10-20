@@ -3,6 +3,7 @@
 import { parseAsInteger, parseAsNumberLiteral, parseAsString, useQueryStates } from "nuqs"
 
 import type { EditorListFilters } from "@/features/editors/api/editors.api"
+import { useRememberListUrl } from "@/lib/list-return"
 
 const parsers = {
   page: parseAsInteger.withDefault(1),
@@ -13,6 +14,7 @@ const parsers = {
 
 export function useEditorFilters() {
   const [state, setState] = useQueryStates(parsers, { history: "replace" })
+  useRememberListUrl()
   const filters: EditorListFilters = {
     page: Math.max(1, state.page),
     search: state.q,

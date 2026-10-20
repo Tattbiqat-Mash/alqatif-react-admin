@@ -57,7 +57,7 @@ Forbidden: when the admin lacks the permission, or the query fails with `403`, r
 - Layout: one `Card`, fields stacked with labels on top; two-column grid (`md:grid-cols-2`) only for short related fields (dates, durations, small selects). Groups of yes/no options sit together as a list of switches.
 - Footer (bottom of the card): "حفظ" (primary, shows a spinner and is disabled while saving) and "تراجع" (outline, back to the list).
 - Above the fields: a server-error banner (`bg-danger-muted text-danger-ink`) when the save fails.
-- On success: invalidate the list and detail keys, toast "تم الحفظ بنجاح", navigate back to the list (keep the list's filters by returning to the previous URL when it is the list).
+- On success: invalidate the list and detail keys, toast "تم الحفظ بنجاح", navigate back to the list (keep the list's filters by returning to the previous URL when it is the list). Built in `src/lib/list-return.ts`: each list's filters hook calls `useRememberListUrl()`; forms navigate with `listReturnHref(path)` and back links use `useListReturnHref(path)` — after save, "العودة للقائمة" and "تراجع" alike.
 - Leaving a dirty form ("تراجع" or a sidebar link) asks "تجاهل التغييرات؟" in a confirm dialog.
 - Forms use React Hook Form + Zod; the schema lives in the feature's `schemas/`. Field-to-body mapping is in the API layer.
 - Required fields: mark the label with `*` and validate in the schema. Follow the old admin for which fields are required.

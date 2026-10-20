@@ -32,6 +32,7 @@ import { useSavePost, useUploadPostImage } from "@/features/posts/hooks/use-post
 import { postFormSchema, type PostFormValues } from "@/features/posts/schemas/post.schema"
 import { bannersStatus, khatmaKind, khatmaSize, postStatus } from "@/lib/labels"
 import { messages } from "@/lib/messages"
+import { listReturnHref } from "@/lib/list-return"
 
 /** Which fields each content type shows (rules/tasks/06-posts-form.md#fields-per-type). */
 function fieldsFor(content: ContentTypeConfig) {
@@ -200,7 +201,7 @@ export function PostForm({ content, postId, defaultValues, meta }: PostFormProps
         saved.current = true
         setConfirmNotify(null)
         toast.success(messages.toasts.saved)
-        router.push(listHref)
+        router.push(listReturnHref(listHref))
       },
       onError: () => setConfirmNotify(null),
     })
@@ -212,7 +213,7 @@ export function PostForm({ content, postId, defaultValues, meta }: PostFormProps
     else submit(values)
   }
 
-  const leave = () => (isDirty && !saved.current ? setConfirmLeave(true) : router.push(listHref))
+  const leave = () => (isDirty && !saved.current ? setConfirmLeave(true) : router.push(listReturnHref(listHref)))
 
   return (
     <form onSubmit={(event) => void handleSubmit(onValid)(event)} noValidate>
@@ -531,7 +532,7 @@ export function PostForm({ content, postId, defaultValues, meta }: PostFormProps
         onConfirm={() => {
           saved.current = true
           setConfirmLeave(false)
-          router.push(listHref)
+          router.push(listReturnHref(listHref))
         }}
       />
     </form>

@@ -14,11 +14,13 @@ import { PostForm } from "@/features/posts/components/post-form"
 import { usePost } from "@/features/posts/hooks/use-post-form"
 import { emptyPostValues } from "@/features/posts/schemas/post.schema"
 import { messages } from "@/lib/messages"
+import { useListReturnHref } from "@/lib/list-return"
 
 function BackButton({ content }: { content: ContentTypeConfig }) {
+  const href = useListReturnHref(contentHref(content.slug))
   return (
     <Button variant="outline" asChild>
-      <Link href={contentHref(content.slug)}>
+      <Link href={href}>
         <ArrowRightIcon data-icon="inline-start" />
         {messages.actions.backToList}
       </Link>

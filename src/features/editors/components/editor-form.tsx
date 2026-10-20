@@ -25,6 +25,7 @@ import { editorSchema, type EditorFormValues } from "@/features/editors/schemas/
 import { updateSessionAdmin } from "@/lib/auth/session-storage"
 import { editorStatus, editorType } from "@/lib/labels"
 import { messages } from "@/lib/messages"
+import { listReturnHref, useListReturnHref } from "@/lib/list-return"
 
 /** Labels as in the old admin's صلاحيات row. */
 const PERMISSION_LABELS: Record<AdminPermission, string> = {
@@ -38,9 +39,10 @@ const PERMISSION_LABELS: Record<AdminPermission, string> = {
 }
 
 export function BackToEditors() {
+  const href = useListReturnHref("/editors")
   return (
     <Button variant="outline" asChild>
-      <Link href="/editors">
+      <Link href={href}>
         <ArrowRightIcon data-icon="inline-start" />
         {messages.actions.backToList}
       </Link>
@@ -84,7 +86,7 @@ export function EditorForm({ editorId, defaultValues }: EditorFormProps) {
           })
         }
         toast.success(messages.toasts.saved)
-        router.push("/editors")
+        router.push(listReturnHref("/editors"))
       },
       onError: () => setConfirmDeactivate(null),
     })
@@ -213,7 +215,7 @@ export function EditorForm({ editorId, defaultValues }: EditorFormProps) {
               {save.isPending && <Spinner />}
               {save.isPending ? messages.states.saving : messages.actions.save}
             </Button>
-            <Button type="button" size="lg" variant="outline" onClick={() => router.push("/editors")} disabled={save.isPending}>
+            <Button type="button" size="lg" variant="outline" onClick={() => router.push(listReturnHref("/editors"))} disabled={save.isPending}>
               {messages.actions.cancel}
             </Button>
           </div>

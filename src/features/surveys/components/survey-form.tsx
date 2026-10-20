@@ -24,11 +24,13 @@ import { useSaveSurvey, useSurvey } from "@/features/surveys/hooks/use-surveys"
 import { emptySurveyValues, surveySchema, type SurveyFormValues } from "@/features/surveys/schemas/survey.schema"
 import { activeStatus } from "@/lib/labels"
 import { messages } from "@/lib/messages"
+import { listReturnHref, useListReturnHref } from "@/lib/list-return"
 
 function Back() {
+  const href = useListReturnHref("/surveys")
   return (
     <Button variant="outline" asChild>
-      <Link href="/surveys">
+      <Link href={href}>
         <ArrowRightIcon data-icon="inline-start" />
         {messages.actions.backToList}
       </Link>
@@ -71,7 +73,7 @@ function SurveyForm({
     save.mutate(values, {
       onSuccess: () => {
         toast.success(messages.toasts.saved)
-        router.push("/surveys")
+        router.push(listReturnHref("/surveys"))
       },
     })
 
@@ -213,7 +215,7 @@ function SurveyForm({
                 {save.isPending && <Spinner />}
                 {save.isPending ? messages.states.saving : messages.actions.save}
               </Button>
-              <Button type="button" size="lg" variant="outline" onClick={() => router.push("/surveys")} disabled={save.isPending}>
+              <Button type="button" size="lg" variant="outline" onClick={() => router.push(listReturnHref("/surveys"))} disabled={save.isPending}>
                 {messages.actions.cancel}
               </Button>
             </div>

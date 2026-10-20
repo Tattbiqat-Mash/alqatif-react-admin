@@ -23,11 +23,13 @@ import { adSchema, type AdFormValues } from "@/features/ads/schemas/ad.schema"
 import { useCategories } from "@/features/categories/hooks/use-categories"
 import { activeStatus, adKind, adType } from "@/lib/labels"
 import { messages } from "@/lib/messages"
+import { listReturnHref, useListReturnHref } from "@/lib/list-return"
 
 export function BackToAds() {
+  const href = useListReturnHref("/ads")
   return (
     <Button variant="outline" asChild>
-      <Link href="/ads">
+      <Link href={href}>
         <ArrowRightIcon data-icon="inline-start" />
         {messages.actions.backToList}
       </Link>
@@ -80,7 +82,7 @@ export function AdForm({ adId, defaultValues }: { adId: number | null; defaultVa
     save.mutate(values, {
       onSuccess: () => {
         toast.success(messages.toasts.saved)
-        router.push("/ads")
+        router.push(listReturnHref("/ads"))
       },
     })
 
@@ -235,7 +237,7 @@ export function AdForm({ adId, defaultValues }: { adId: number | null; defaultVa
               {save.isPending && <Spinner />}
               {save.isPending ? messages.states.saving : messages.actions.save}
             </Button>
-            <Button type="button" size="lg" variant="outline" onClick={() => router.push("/ads")} disabled={save.isPending}>
+            <Button type="button" size="lg" variant="outline" onClick={() => router.push(listReturnHref("/ads"))} disabled={save.isPending}>
               {messages.actions.cancel}
             </Button>
           </div>

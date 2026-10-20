@@ -23,6 +23,7 @@ import { useComment, useSaveComment } from "@/features/comments/hooks/use-commen
 import { formatDateTime } from "@/lib/format"
 import { commentStatus } from "@/lib/labels"
 import { messages } from "@/lib/messages"
+import { listReturnHref, useListReturnHref } from "@/lib/list-return"
 
 const schema = z.object({
   comment: z.string().trim().min(1, messages.validation.required),
@@ -31,9 +32,10 @@ const schema = z.object({
 type Values = z.infer<typeof schema>
 
 function Back() {
+  const href = useListReturnHref("/comments")
   return (
     <Button variant="outline" asChild>
-      <Link href="/comments">
+      <Link href={href}>
         <ArrowRightIcon data-icon="inline-start" />
         {messages.actions.backToList}
       </Link>
@@ -62,7 +64,7 @@ function CommentForm({ comment }: { comment: CommentItem }) {
     save.mutate(values, {
       onSuccess: () => {
         toast.success(messages.toasts.saved)
-        router.push("/comments")
+        router.push(listReturnHref("/comments"))
       },
     })
 
@@ -108,7 +110,7 @@ function CommentForm({ comment }: { comment: CommentItem }) {
               {save.isPending && <Spinner />}
               {save.isPending ? messages.states.saving : messages.actions.save}
             </Button>
-            <Button type="button" size="lg" variant="outline" onClick={() => router.push("/comments")} disabled={save.isPending}>
+            <Button type="button" size="lg" variant="outline" onClick={() => router.push(listReturnHref("/comments"))} disabled={save.isPending}>
               {messages.actions.cancel}
             </Button>
           </div>
