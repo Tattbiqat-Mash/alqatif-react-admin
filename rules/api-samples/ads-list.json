@@ -1,0 +1,55 @@
+{
+  "status": "success",
+  "rowsCount": 4,
+  "pagesCount": 1,
+  "data": [
+    {
+      "id": "478585",
+      "title": "35E97110-CC6E-4F87-B8A9-EAB2EF5C6231",
+      "active": "0",
+      "type": "2",
+      "kind": "1",
+      "image": "https://alqhat.com/beta/wp-content/uploads/2023/04/35E97110-CC6E-4F87-B8A9-EAB2EF5C6231.jpeg",
+      "requiredViews": "0",
+      "startDate": "2022-02-02",
+      "endDate": "2030-02-02",
+      "views": "0"
+    },
+    {
+      "id": "463480",
+      "title": "b8e74361-8565-4f25-9dc4-825504b9b4e0",
+      "active": "0",
+      "type": "2",
+      "kind": "1",
+      "image": "https://alqhat.com/beta/wp-content/uploads/2023/02/b8e74361-8565-4f25-9dc4-825504b9b4e0.jpeg",
+      "requiredViews": "0",
+      "startDate": "2022-02-02",
+      "endDate": "2023-07-03",
+      "views": "0"
+    },
+    {
+      "id": "409655",
+      "title": "05E33BE2-A68E-4BD4-B809-C3482C5DA375",
+      "active": "1",
+      "type": "2",
+      "kind": "1",
+      "image": "https://alqhat.com/beta/wp-content/uploads/2022/06/05E33BE2-A68E-4BD4-B809-C3482C5DA375.jpeg",
+      "requiredViews": "0",
+      "startDate": "2022-02-02",
+      "endDate": "2030-02-02",
+      "views": "0"
+    },
+    {
+      "id": "386526",
+      "title": "CD41591B-E81A-4A55-9674-499EB018AD76",
+      "active": "1",
+      "type": "2",
+      "kind": "1",
+      "image": "https://alqhat.com/beta/wp-content/uploads/2022/03/CD41591B-E81A-4A55-9674-499EB018AD76.jpeg",
+      "requiredViews": "0",
+      "startDate": "2022-02-02",
+      "endDate": "2030-02-02",
+      "views": "0"
+    }
+  ]
+}

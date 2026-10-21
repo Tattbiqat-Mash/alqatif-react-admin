@@ -4,17 +4,18 @@ import { normalizeList, toApiPage, type ListEnvelopeDto, type ListResult } from 
 import { pickNumber, pickText, unwrapDetails, unreadableDetails } from "@/lib/api/parse"
 
 /**
- * ⚠ TBD — PROVISIONAL. No comments/list or comments/getDetails sample yet. Field names are
- * candidates taken from the collection's request fields (`comment`, `active`, `postId`,
- * `commentUser`) and the old admin's columns. Replace with real DTOs when samples arrive.
+ * The first name in each list is the field `comments/getDetails` sends
+ * (rules/api-samples/comments-details.json): `id`, `postId`, `comment_author`,
+ * `comment_author_email`, `commentDate`, `comment`, `active`, `userId`, `title` (the post's),
+ * all strings. ⚠ TBD: no comments/list sample yet — the other names stay as fallbacks for it.
  */
 const KEYS = {
   id: ["id"],
   text: ["comment", "content", "text", "commentText"],
   active: ["active", "status"],
   postId: ["postId", "post_id"],
-  postTitle: ["postTitle", "title", "post_title", "postName"],
-  user: ["userName", "name", "commentUserName", "commenterName", "displayName", "user"],
+  postTitle: ["title", "postTitle", "post_title", "postName"],
+  user: ["comment_author", "userName", "name", "commentUserName", "commenterName", "displayName", "user"],
   date: ["commentDate", "date", "createdAt", "created_at", "addDate", "puplishDate"],
 } as const
 

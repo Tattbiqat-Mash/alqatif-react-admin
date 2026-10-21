@@ -74,7 +74,7 @@ export async function listEditors(filters: EditorListFilters): Promise<ListResul
 const isOn = (value: unknown) => toNumber(value) === 1
 const bit = (value: boolean): 0 | 1 => (value ? 1 : 0)
 
-/** ⚠ TBD — provisional, see EditorDetailsDto. */
+/** See EditorDetailsDto (confirmed by rules/api-samples/admins-details.json). */
 export function mapEditorDetails(raw: unknown): { id: number; values: EditorFormValues } {
   const root = (raw ?? {}) as { data?: unknown }
   const data = Array.isArray(root.data) ? root.data[0] : root.data

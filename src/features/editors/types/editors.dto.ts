@@ -40,9 +40,8 @@ export type EditorSaveRequestDto = {
 }
 
 /**
- * ⚠ TBD — PROVISIONAL. No `admins/getDetails` sample yet. Assumed to be the same admin
- * record as `data` in the login response (rules/api-samples/auth-login.json), under
- * `data` (an object or a one-item array) or at the root. `password` is ignored.
+ * `admins/getDetails` → `{ status, data: [EditorDetailsDto] }`, a one-item array with every
+ * value a string (rules/api-samples/admins-details.json). No password in the reply.
  */
 export type EditorDetailsDto = {
   id: number | string

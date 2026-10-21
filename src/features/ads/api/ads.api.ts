@@ -6,17 +6,13 @@ import { uploadImageTo } from "@/lib/api/upload"
 import type { AdFormValues } from "@/features/ads/schemas/ad.schema"
 
 /**
- * ⚠ TBD — PROVISIONAL. No ads/list or ads/getDetails sample yet. Keys come from the
- * collection's add body and from posts/getBanners rows (same ads table: id, type, kind,
- * image, link, postId, requiredViews). Replace with real DTOs when samples arrive.
+ * Confirmed by samples, every value a string:
+ * - `ads/list` rows (rules/api-samples/ads-list.json): `id`, `title`, `active`, `type`, `kind`,
+ *   `image`, `requiredViews`, `startDate`, `endDate`, `views`.
+ * - `ads/getDetails` (rules/api-samples/ads-details.json): the same plus `link`, `postId`,
+ *   `addDate`, `categories` ("0" in the sample — ⚠ TBD meaning).
  */
 type RawRow = Record<string, unknown>
-
-const KEYS = {
-  views: ["views", "viewsCount", "showCount", "displayCount", "totalViews"],
-  startDate: ["startDate", "start_date"],
-  endDate: ["endDate", "end_date"],
-} as const
 
 export type AdItem = {
   id: number
@@ -26,7 +22,7 @@ export type AdItem = {
   image: string | null
   startDate: string | null
   endDate: string | null
-  /** عدد مرات الظهور (⚠ TBD: total views vs requiredViews). */
+  /** How many times the ad has been shown (`views`) — not `requiredViews`, the per-person cap. */
   views: number
   active: boolean
 }
@@ -38,10 +34,10 @@ export function mapAd(row: RawRow): AdItem {
     type: pickNumber(row, ["type"], -1),
     kind: pickNumber(row, ["kind"], -1),
     image: pickText(row, ["image"]) || null,
-    startDate: pickText(row, KEYS.startDate) || null,
-    endDate: pickText(row, KEYS.endDate) || null,
-    views: pickNumber(row, KEYS.views, 0),
-    active: pickNumber(row, ["active", "status"], 0) === 1,
+    startDate: pickText(row, ["startDate"]) || null,
+    endDate: pickText(row, ["endDate"]) || null,
+    views: pickNumber(row, ["views"], 0),
+    active: pickNumber(row, ["active"], 0) === 1,
   }
 }
 
@@ -94,9 +90,9 @@ export function mapAdDetails(raw: unknown): { id: number; values: AdFormValues }
       kind: pickNumber(row, ["kind"], 1) === 0 ? 0 : 1,
       postId: postId > 0 ? postId : null,
       link: pickText(row, ["link"]),
-      startDate: toDate(pickText(row, KEYS.startDate)),
-      endDate: toDate(pickText(row, KEYS.endDate)),
-      active: pickNumber(row, ["active", "status"], 0) === 1,
+      startDate: toDate(pickText(row, ["startDate"])),
+      endDate: toDate(pickText(row, ["endDate"])),
+      active: pickNumber(row, ["active"], 0) === 1,
       categories: categoryIds(row.categories),
     },
   }

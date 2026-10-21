@@ -119,6 +119,8 @@ Known `type=3` categories (from the live admin, `/v1`): وظائف `79` · مف�
 
 Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 
+`getDetails` response ([sample](api-samples/comments-details.json), commenter name redacted): `{ status, data: [row] }` — a one-item array; every value a string: `id`, `postId`, `comment_author` (the commenter's name — shown as المستخدم), `comment_author_email` (often `""`), `commentDate` (`YYYY-MM-DD HH:mm:ss`), `comment`, `active`, `userId` (`"0"` for a visitor), `title` (**the post's title**). ⚠ TBD: no `list` sample yet — the app assumes the same field names (`mapComment` in `comments.api.ts` keeps fallbacks).
+
 ## Ads — `admin/ads`
 
 | Method | Path | Body / params |
@@ -140,6 +142,10 @@ Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 | `categories` | التصنيف — comma-separated category ids |
 | `startDate` / `endDate` | `YYYY-MM-DD` |
 
+`getDetails` response ([sample](api-samples/ads-details.json)): `{ status, data: [row] }` — a one-item array, every value a string: `id`, `title`, `type`, `image` (full URL), `kind`, `link`, `postId` (`"0"` when the ad links out), `requiredViews`, `addDate` (`YYYY-MM-DD HH:mm:ss`), `startDate`, `endDate`, `categories`, `views`, `active`. The app's mapping matched it as is. ⚠ TBD: what `categories: "0"` means (sample: a popup ad, `type=1`) — the form drops `0`, loads the ad with no category ticked, and requires at least one before saving.
+
+`list` response ([sample](api-samples/ads-list.json)): the list envelope (`rowsCount`, `pagesCount`) with rows `id`, `title`, `active`, `type`, `kind`, `image` (full URL; old ads point to `alqhat.com/beta/wp-content/uploads/…`), `requiredViews`, `startDate`, `endDate`, `views` — every value a string; no `link`, `postId` or `categories`. The table's "عدد مرات الظهور" is `views` (times shown), not `requiredViews` (the per-person cap set in the form).
+
 ## Editors (admins) — `admin/admins`
 
 | Method | Path | Body / params |
@@ -152,6 +158,7 @@ Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 | GET | `/admin/admins/delete/{id}` | |
 
 - `list` response ([sample](api-samples/admins-list.json), types in `src/features/editors/types/editors.dto.ts`): the list envelope with rows `id`, `type`, `userName`, `displayName`, `active` — **no password** (unlike the login response). The "كل المحررين" filter on content lists calls it with `page` only (no `type`) and reads every page. ⚠ TBD: that omitting `type` returns both أدمن and أدمن فرعي (the sample had type 0 only), and what a sub-admin without `allowAdmins` gets (a 403 would leave the filter empty).
+- `getDetails` response ([sample](api-samples/admins-details.json)): `{ status, data: [row] }` — a one-item array, every value a string: `id`, `userName`, `displayName`, `email`, `type`, `active`, and the seven `allow*` flags (`"0"` / `"1"`). **No password** (the form leaves it empty; an empty field is not sent on edit). The app's mapping matched it as is.
 - `type`: `0` أدمن · `1` أدمن فرعي. ⚠ TBD: the old list shows "محرر" / "معلن" in the type column — confirm the labels with the user.
 - `active`: `0` موقوف · `1` فعال.
 - `allow*`: `0` / `1`. Labels: المواضيع (`allowPosts`) · التعليقات · الإعلانات · المحررين · الإشعارات · الاستبيانات · الإعدادات.
@@ -191,4 +198,4 @@ Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 | GET | `/admin/settings/getDetails` | |
 | POST | `/admin/settings/edit` | `facebook`, `twitter`, `insta`, `whatsapp`, `email`, `about`, `privacy`, `info` |
 
-`getDetails` response ([sample](api-samples/settings-details.json)): `{ status, data: [settings] }` — a one-item array with the 8 fields above **plus `snapchat`, `telegram`, `tiktok`, `mobile`**, which the collection's `edit` body does not have. ⚠ TBD: whether `edit` accepts (or wipes) those four; the form shows and sends only the 8.
+`getDetails` response ([sample](api-samples/settings-details.json)): `{ status, data: [settings] }` — a one-item array with the 8 fields above **plus `snapchat`, `telegram`, `tiktok`, `mobile`**, which the collection's `edit` body does not have. The form shows only the 8; the four extras are sent back to `edit` exactly as loaded (`saveSettings` in `settings.api.ts`) so they are never wiped. ⚠ TBD: whether `edit` reads them at all.

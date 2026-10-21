@@ -143,13 +143,16 @@
 
   @keyframes fetching-bar {
 
-    /* RTL: the bar travels from the inline start (right) to the left. */
+    /*
+     * RTL: the bar (a third of the track, resting at the right edge) enters from the
+     * right and leaves past the left edge: +100% is just off the right, -300% just off the left.
+     */
     from {
-      transform: translateX(300%);
+      transform: translateX(100%);
     }
 
     to {
-      transform: translateX(-100%);
+      transform: translateX(-300%);
     }
   }
 

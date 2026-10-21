@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": "18",
+      "userName": "ttt",
+      "displayName": "ttt",
+      "email": "ttt@ttt.com",
+      "type": "1",
+      "active": "0",
+      "allowPosts": "1",
+      "allowComments": "1",
+      "allowAds": "0",
+      "allowAdmins": "1",
+      "allowNotifications": "0",
+      "allowSurveys": "0",
+      "allowSettings": "0"
+    }
+  ]
+}
