@@ -2,30 +2,32 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { PencilIcon, PlusIcon, ToggleRightIcon, Trash2Icon } from "lucide-react"
+import { NewspaperIcon, PencilIcon, Trash2Icon } from "lucide-react"
 
 import { useAuth } from "@/components/providers/auth-provider"
+import { AddButton } from "@/components/ui/add-button"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table"
-import { FilterItem, FiltersBar } from "@/components/ui/filters-bar"
+import { countActive, FilterItem, FiltersBar } from "@/components/ui/filters-bar"
 import { FilterSelect } from "@/components/ui/filter-select"
 import { PageHeader } from "@/components/ui/page-header"
 import { SearchInput } from "@/components/ui/search-input"
 import { ForbiddenState } from "@/components/ui/states"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { IconAction } from "@/components/ui/icon-action"
+import { contentHref } from "@/config/content-types"
 import type { EditorListItem } from "@/features/editors/api/editors.api"
 import { useEditorFilters } from "@/features/editors/hooks/use-editor-filters"
-import { useDeleteEditor, useEditorsList, useToggleEditor } from "@/features/editors/hooks/use-editors"
+import { useDeleteEditor, useEditorsList } from "@/features/editors/hooks/use-editors"
 import { editorStatus, editorType } from "@/lib/labels"
 import { messages } from "@/lib/messages"
 
 function EditorRowActions({ editor, isSelf }: { editor: EditorListItem; isSelf: boolean }) {
-  const toggle = useToggleEditor()
+  const { can } = useAuth()
   const remove = useDeleteEditor()
-  const [confirm, setConfirm] = React.useState<"deactivate" | "delete" | null>(null)
+  const [confirmDelete, setConfirmDelete] = React.useState(false)
   const label = editor.displayName
 
   return (
@@ -38,54 +40,41 @@ function EditorRowActions({ editor, isSelf }: { editor: EditorListItem; isSelf: 
         </Button>
       </IconAction>
 
-      {/* You cannot lock yourself out from here. */}
+      {/* The news list filtered by this editor (its "المحرر" filter). */}
+      {can("allowPosts") && (
+        <IconAction label="أخبار المحرر">
+          <Button variant="ghost" size="icon-sm" asChild>
+            <Link href={`${contentHref("news")}?editor=${editor.id}`} aria-label={`أخبار المحرر: ${label}`}>
+              <NewspaperIcon />
+            </Link>
+          </Button>
+        </IconAction>
+      )}
+
+      {/* You cannot delete yourself from here. */}
       {!isSelf && (
-        <>
-          <IconAction label={editor.active ? "إيقاف" : "تفعيل"}>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label={`${editor.active ? "إيقاف" : "تفعيل"}: ${label}`}
-              disabled={toggle.isPending}
-              // Deactivating signs the editor out of the admin, so it is confirmed first.
-              onClick={() => (editor.active ? setConfirm("deactivate") : toggle.mutate({ id: editor.id }))}
-            >
-              <ToggleRightIcon />
-            </Button>
-          </IconAction>
-          <IconAction label={messages.actions.delete}>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              className="text-danger-ink hover:bg-danger-muted hover:text-danger-ink"
-              aria-label={`${messages.actions.delete}: ${label}`}
-              onClick={() => setConfirm("delete")}
-            >
-              <Trash2Icon />
-            </Button>
-          </IconAction>
-        </>
+        <IconAction label={messages.actions.delete}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="text-danger-ink hover:bg-danger-muted hover:text-danger-ink"
+            aria-label={`${messages.actions.delete}: ${label}`}
+            onClick={() => setConfirmDelete(true)}
+          >
+            <Trash2Icon />
+          </Button>
+        </IconAction>
       )}
 
       <ConfirmDialog
-        open={confirm === "deactivate"}
-        onOpenChange={(open) => !open && setConfirm(null)}
-        title="إيقاف المحرر"
-        description={`سيتم إيقاف حساب «${label}» ولن يتمكن من الدخول إلى لوحة التحكم.`}
-        confirmLabel="إيقاف"
-        destructive
-        pending={toggle.isPending}
-        onConfirm={() => toggle.mutate({ id: editor.id }, { onSettled: () => setConfirm(null) })}
-      />
-      <ConfirmDialog
-        open={confirm === "delete"}
-        onOpenChange={(open) => !open && setConfirm(null)}
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
         title={messages.confirm.deleteTitle}
         description={messages.confirm.deleteDescription(label)}
         confirmLabel={messages.actions.delete}
         destructive
         pending={remove.isPending}
-        onConfirm={() => remove.mutate({ id: editor.id }, { onSettled: () => setConfirm(null) })}
+        onConfirm={() => remove.mutate({ id: editor.id }, { onSettled: () => setConfirmDelete(false) })}
       />
     </div>
   )
@@ -129,20 +118,15 @@ export function EditorsScreen() {
     <div className="flex flex-col gap-4 md:gap-6">
       <PageHeader
         title="المحررين"
-        actions={
-          <Button asChild>
-            <Link href="/editors/new">
-              <PlusIcon data-icon="inline-start" />
-              {messages.actions.add}
-            </Link>
-          </Button>
-        }
+        actions={<AddButton href="/editors/new" />}
       />
       <Card className="gap-0 py-0">
-        <FiltersBar hasActiveFilters={hasActiveFilters} onClear={clear}>
-          <FilterItem className="sm:w-72">
-            <SearchInput value={filters.search} onChange={setSearch} placeholder="بحث بالاسم…" />
-          </FilterItem>
+        <FiltersBar
+          search={<SearchInput value={filters.search} onChange={setSearch} placeholder="بحث بالاسم…" />}
+          activeCount={countActive(filters.type, filters.active)}
+          hasActiveFilters={hasActiveFilters}
+          onClear={clear}
+        >
           <FilterItem>
             <FilterSelect<0 | 1>
               aria-label="النوع"

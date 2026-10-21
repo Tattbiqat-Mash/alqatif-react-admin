@@ -1,12 +1,9 @@
 "use client"
 
-import Link from "next/link"
-import { PlusIcon } from "lucide-react"
-
 import { useAuth } from "@/components/providers/auth-provider"
-import { Button } from "@/components/ui/button"
+import { AddButton } from "@/components/ui/add-button"
 import { Card } from "@/components/ui/card"
-import { FilterItem, FiltersBar } from "@/components/ui/filters-bar"
+import { countActive, FilterItem, FiltersBar } from "@/components/ui/filters-bar"
 import { FilterSelect } from "@/components/ui/filter-select"
 import { ForbiddenState } from "@/components/ui/states"
 import { PageHeader } from "@/components/ui/page-header"
@@ -21,7 +18,6 @@ import { usePostFilters } from "@/features/posts/hooks/use-post-filters"
 import { usePostsList } from "@/features/posts/hooks/use-posts"
 import type { PostStatus } from "@/features/posts/types/posts.types"
 import { pinned as pinnedLabels, postStatus } from "@/lib/labels"
-import { messages } from "@/lib/messages"
 
 export function PostsScreen({ slug }: { slug: string }) {
   // The page validated the slug, so the config exists.
@@ -46,23 +42,16 @@ export function PostsScreen({ slug }: { slug: string }) {
     <div className="flex flex-col gap-4 md:gap-6">
       <PageHeader
         title={content.title}
-        actions={
-          can("allowPosts") && (
-            <Button asChild>
-              <Link href={`${contentHref(content.slug)}/new`}>
-                <PlusIcon data-icon="inline-start" />
-                {messages.actions.add}
-              </Link>
-            </Button>
-          )
-        }
+        actions={can("allowPosts") && <AddButton href={`${contentHref(content.slug)}/new`} />}
       />
 
       <Card className="gap-0 py-0">
-        <FiltersBar hasActiveFilters={hasActiveFilters} onClear={clear}>
-          <FilterItem className="sm:w-72">
-            <SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في العناوين…" />
-          </FilterItem>
+        <FiltersBar
+          search={<SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في العناوين…" />}
+          activeCount={countActive(filters.categoryId, filters.editorId, filters.writer, filters.status, filters.pinned)}
+          hasActiveFilters={hasActiveFilters}
+          onClear={clear}
+        >
           {content.categoryId === null && (
             <FilterItem>
               <FilterSelect<number>

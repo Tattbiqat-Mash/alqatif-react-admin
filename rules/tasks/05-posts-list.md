@@ -25,7 +25,7 @@ Screenshots: [`05-jobs-list.png`](screenshots/05-jobs-list.png) · [`05-lost-fou
 | `lost-found` | مفقودات وموجودات | 3 | 80 ⚠ | no (fixed) |
 
 - `src/features/posts/{api,hooks,components,types}`, `src/features/categories/{api,hooks}` (category options)
-- Endpoints: `posts/list`, `posts/listAutherNames`, `posts/changeActive`, `posts/changeFixed`, `posts/delete`, `admins/list` (editor filter), `categories/list` — see [api-endpoints.md](../api-endpoints.md#posts--adminposts)
+- Endpoints: `posts/list`, `posts/listAutherNames`, `posts/sendPostNotification`, `posts/delete`, `admins/list` (editor filter), `categories/list` — see [api-endpoints.md](../api-endpoints.md#posts--adminposts)
 
 ## Requirements
 
@@ -56,20 +56,19 @@ Section title + "إضافة" → `/content/<slug>/new` (only with `allowPosts`).
 | مثبت | badge مثبت / غير مثبت |
 | التحكم | actions below |
 
-For `type=3` sections, the title column shows the full short text (it is the post body), 3 lines max.
+Titles are 2 lines max in every section — `type=3` too, where the title is the whole short text — with the full text in `title` on hover (user's decision).
 
 ### Row actions
 
 | Action | Icon | Behaviour |
 |---|---|---|
 | تعديل | `Pencil` | `/content/<slug>/<id>/edit` |
-| تغيير الحالة | `ToggleRight` | menu: تحت المراجعة / منشور / موقوف → `changeActive/{id}/{active}` |
-| تثبيت / إلغاء التثبيت | `Pin` | `changeFixed/{id}` |
+| إرسال إشعار | `Bell` | confirm → `GET sendPostNotification/{id}` (pushes the post to the app's users; toast "تم إرسال الإشعار") |
 | التعليقات | `MessageSquare` | `/comments?postId=<id>` |
 | مشاهدة الخبر | `ExternalLink` | opens `https://alqhat.com/q/<id>` in a new tab ⚠ |
 | حذف | `Trash2` | confirm → `delete/{id}` |
 
-Optimistic status/pin updates with rollback; toasts on success/failure.
+No status or pin actions in the row (user's decision) — status and pinning are changed in the edit form. Optimistic delete with rollback; toasts on success/failure.
 
 ### Pagination
 

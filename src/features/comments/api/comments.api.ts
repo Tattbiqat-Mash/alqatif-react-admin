@@ -70,16 +70,11 @@ export async function getComment(id: number): Promise<CommentItem> {
   return comment
 }
 
-// ⚠ TBD: the replies of edit / changeActive / delete are unknown; any non-error reply counts as success.
+// ⚠ TBD: the replies of edit / delete are unknown; any non-error reply counts as success.
 
 /** Body from the collection: `id`, `comment`, `active`. */
 export function saveComment(id: number, values: { comment: string; active: boolean }) {
   return apiPost<unknown>(endpoints.comments.edit, { id, comment: values.comment, active: values.active ? 1 : 0 })
-}
-
-/** Toggles منشور / موقوف. */
-export function toggleComment(id: number) {
-  return apiGet<unknown>(endpoints.comments.changeActive(id))
 }
 
 export function deleteComment(id: number) {

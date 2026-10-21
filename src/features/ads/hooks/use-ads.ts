@@ -9,7 +9,6 @@ import {
   deleteAd,
   getAd,
   listAds,
-  toggleAd,
   updateAd,
   uploadAdImage,
   type AdItem,
@@ -84,28 +83,6 @@ export function useSaveAd(id: number | null) {
   return useMutation<unknown, ApiError, AdFormValues>({
     mutationFn: (values) => (id === null ? createAd(values) : updateAd(id, values)),
     onSuccess: () => invalidate(id ?? undefined),
-  })
-}
-
-export function useToggleAd() {
-  const queryClient = useQueryClient()
-  const invalidate = useInvalidate()
-  return useMutation<unknown, ApiError, { id: number }, { rollback: () => void }>({
-    mutationFn: ({ id }) => toggleAd(id),
-    onMutate: async ({ id }) => {
-      await queryClient.cancelQueries({ queryKey: adKeys.lists() })
-      const snapshot = queryClient.getQueriesData<ListResult<AdItem>>({ queryKey: adKeys.lists() })
-      queryClient.setQueriesData<ListResult<AdItem>>({ queryKey: adKeys.lists() }, (old) =>
-        old ? { ...old, items: old.items.map((a) => (a.id === id ? { ...a, active: !a.active } : a)) } : old,
-      )
-      return { rollback: () => snapshot.forEach(([key, data]) => queryClient.setQueryData(key, data)) }
-    },
-    onError: (error, _vars, context) => {
-      context?.rollback()
-      toast.error(error.message)
-    },
-    onSuccess: () => toast.success(messages.toasts.statusChanged),
-    onSettled: (_d, _e, { id }) => invalidate(id),
   })
 }
 

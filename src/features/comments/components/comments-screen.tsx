@@ -2,13 +2,13 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ExternalLinkIcon, PencilIcon, ToggleRightIcon, Trash2Icon, XIcon } from "lucide-react"
+import { ExternalLinkIcon, PencilIcon, Trash2Icon, XIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table"
-import { FilterItem, FiltersBar } from "@/components/ui/filters-bar"
+import { countActive, FilterItem, FiltersBar } from "@/components/ui/filters-bar"
 import { FilterSelect } from "@/components/ui/filter-select"
 import { IconAction } from "@/components/ui/icon-action"
 import { PageHeader } from "@/components/ui/page-header"
@@ -17,13 +17,12 @@ import { ForbiddenState } from "@/components/ui/states"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { publicPostUrl } from "@/config/content-types"
 import type { CommentItem } from "@/features/comments/api/comments.api"
-import { useCommentFilters, useCommentsList, useDeleteComment, useToggleComment } from "@/features/comments/hooks/use-comments"
+import { useCommentFilters, useCommentsList, useDeleteComment } from "@/features/comments/hooks/use-comments"
 import { formatDateTime } from "@/lib/format"
 import { commentStatus } from "@/lib/labels"
 import { messages } from "@/lib/messages"
 
 function CommentRowActions({ comment }: { comment: CommentItem }) {
-  const toggle = useToggleComment()
   const remove = useDeleteComment()
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const short = comment.text.length > 60 ? `${comment.text.slice(0, 60)}…` : comment.text
@@ -35,17 +34,6 @@ function CommentRowActions({ comment }: { comment: CommentItem }) {
           <Link href={`/comments/${comment.id}/edit`} aria-label={`${messages.actions.edit}: ${short}`}>
             <PencilIcon />
           </Link>
-        </Button>
-      </IconAction>
-      <IconAction label={comment.active ? "إيقاف" : "نشر"}>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={comment.active ? "إيقاف التعليق" : "نشر التعليق"}
-          disabled={toggle.isPending}
-          onClick={() => toggle.mutate({ id: comment.id })}
-        >
-          <ToggleRightIcon />
         </Button>
       </IconAction>
       <IconAction label={messages.actions.delete}>
@@ -121,10 +109,22 @@ export function CommentsScreen() {
     <div className="flex flex-col gap-4 md:gap-6">
       <PageHeader title="التعليقات" />
       <Card className="gap-0 py-0">
-        <FiltersBar hasActiveFilters={hasActiveFilters} onClear={clear}>
-          <FilterItem className="sm:w-72">
-            <SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في التعليقات…" />
-          </FilterItem>
+        <FiltersBar
+          search={<SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في التعليقات…" />}
+          activeCount={countActive(filters.active)}
+          extra={
+            filters.postId !== null && (
+              <span className="inline-flex h-8 items-center gap-1 self-start rounded-full bg-primary-muted ps-3 text-xs font-medium text-primary-ink sm:self-center">
+                تعليقات الخبر رقم {filters.postId}
+                <Button type="button" variant="ghost" size="icon-xs" aria-label="إلغاء تصفية الخبر" onClick={clearPost}>
+                  <XIcon />
+                </Button>
+              </span>
+            )
+          }
+          hasActiveFilters={hasActiveFilters}
+          onClear={clear}
+        >
           <FilterItem>
             <FilterSelect<0 | 1>
               aria-label="حالة النشر"
@@ -134,14 +134,6 @@ export function CommentsScreen() {
               options={commentStatus.options as { value: 0 | 1; label: string }[]}
             />
           </FilterItem>
-          {filters.postId !== null && (
-            <span className="inline-flex h-8 items-center gap-1 self-start rounded-full bg-primary-muted ps-3 text-xs font-medium text-primary-ink sm:self-center">
-              تعليقات الخبر رقم {filters.postId}
-              <Button type="button" variant="ghost" size="icon-xs" aria-label="إلغاء تصفية الخبر" onClick={clearPost}>
-                <XIcon />
-              </Button>
-            </span>
-          )}
         </FiltersBar>
         <DataTable
           columns={columns}

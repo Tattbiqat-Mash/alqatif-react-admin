@@ -117,7 +117,6 @@ export function updateSurvey(id: number, values: SurveyFormValues) {
   })
 }
 
-export const toggleSurvey = (id: number) => apiGet<unknown>(endpoints.surveys.changeActive(id))
 export const deleteSurvey = (id: number) => apiGet<unknown>(endpoints.surveys.delete(id))
 export const addAnswer = (surveyId: number, text: string) =>
   apiPost<unknown>(endpoints.surveys.addAnswer, { surveyId, question: text.trim() })

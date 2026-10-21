@@ -2,13 +2,14 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { PencilIcon, PlusIcon, ToggleRightIcon, Trash2Icon } from "lucide-react"
+import { PencilIcon, Trash2Icon } from "lucide-react"
 
+import { AddButton } from "@/components/ui/add-button"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table"
-import { FilterItem, FiltersBar } from "@/components/ui/filters-bar"
+import { countActive, FilterItem, FiltersBar } from "@/components/ui/filters-bar"
 import { FilterSelect } from "@/components/ui/filter-select"
 import { IconAction } from "@/components/ui/icon-action"
 import { PageHeader } from "@/components/ui/page-header"
@@ -16,13 +17,13 @@ import { SearchInput } from "@/components/ui/search-input"
 import { ForbiddenState } from "@/components/ui/states"
 import { StatusBadge } from "@/components/ui/status-badge"
 import type { SurveyItem } from "@/features/surveys/api/surveys.api"
-import { useSurveyFilters, useSurveyRowMutations, useSurveysList } from "@/features/surveys/hooks/use-surveys"
+import { useDeleteSurvey, useSurveyFilters, useSurveysList } from "@/features/surveys/hooks/use-surveys"
 import { formatDateTime, formatNumber } from "@/lib/format"
 import { activeStatus } from "@/lib/labels"
 import { messages } from "@/lib/messages"
 
 function SurveyRowActions({ survey }: { survey: SurveyItem }) {
-  const { toggle, remove } = useSurveyRowMutations()
+  const remove = useDeleteSurvey()
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const name = survey.title || `الاستبيان رقم ${survey.id}`
 
@@ -33,17 +34,6 @@ function SurveyRowActions({ survey }: { survey: SurveyItem }) {
           <Link href={`/surveys/${survey.id}/edit`} aria-label={`${messages.actions.edit}: ${name}`}>
             <PencilIcon />
           </Link>
-        </Button>
-      </IconAction>
-      <IconAction label={survey.active ? "إيقاف" : "تفعيل"}>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={`${survey.active ? "إيقاف" : "تفعيل"}: ${name}`}
-          disabled={toggle.isPending}
-          onClick={() => toggle.mutate({ id: survey.id })}
-        >
-          <ToggleRightIcon />
         </Button>
       </IconAction>
       <IconAction label={messages.actions.delete}>
@@ -78,7 +68,12 @@ const columns: DataTableColumn<SurveyItem>[] = [
     header: "العنوان",
     className: "min-w-56",
     cell: (s) => (
-      <Link href={`/surveys/${s.id}/edit`} className="font-medium text-foreground hover:text-primary-ink hover:underline" dir="auto">
+      <Link
+        href={`/surveys/${s.id}/edit`}
+        title={s.title || undefined}
+        className="line-clamp-2 font-medium text-foreground hover:text-primary-ink hover:underline"
+        dir="auto"
+      >
         {s.title || "—"}
       </Link>
     ),
@@ -106,20 +101,15 @@ export function SurveysScreen() {
     <div className="flex flex-col gap-4 md:gap-6">
       <PageHeader
         title="الاستبيانات"
-        actions={
-          <Button asChild>
-            <Link href="/surveys/new">
-              <PlusIcon data-icon="inline-start" />
-              {messages.actions.add}
-            </Link>
-          </Button>
-        }
+        actions={<AddButton href="/surveys/new" />}
       />
       <Card className="gap-0 py-0">
-        <FiltersBar hasActiveFilters={hasActiveFilters} onClear={clear}>
-          <FilterItem className="sm:w-72">
-            <SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في العناوين…" />
-          </FilterItem>
+        <FiltersBar
+          search={<SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في العناوين…" />}
+          activeCount={countActive(filters.active)}
+          hasActiveFilters={hasActiveFilters}
+          onClear={clear}
+        >
           <FilterItem>
             <FilterSelect<0 | 1>
               aria-label="الحالة"

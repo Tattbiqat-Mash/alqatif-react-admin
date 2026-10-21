@@ -95,12 +95,14 @@ In RTL the sidebar sits on the right (the inline-start side). Use logical proper
 ### Header (`src/components/layout/header.tsx`)
 
 - `bg-surface border-b border-border h-16`, always visible: the shell is exactly one screen tall (`h-svh`) and only `<main>` scrolls, never the window. Anything that must follow scrolling (e.g. the editor toolbar) uses CSS `sticky` inside `<main>`, not window scroll listeners.
-- Start: menu button (below `lg` only). The page title is not repeated here — it lives in the page header.
+- Start: menu button (below `lg` only). Below `sm` the page title follows it (truncated, `aria-hidden`): `PageHeader` hands it to the shell through `PageChromeProvider` (`src/components/layout/page-chrome.tsx`). From `sm` the title lives only in the page header.
 - End (the left side in RTL): "مرحباً، {displayName}" + avatar (image, or the first letter on `bg-primary-muted text-primary-ink`) + chevron-down. Clicking opens a dropdown (shadcn `DropdownMenu`) with: avatar, display name, email, a separator, and "خروج" (`LogOut` icon, `text-danger-ink`).
 
 ### Page header (`src/components/ui/page-header.tsx`)
 
 Title (and optional subtitle / record count) at the start; the page's main action at the end — "إضافة" (`Plus`) on lists, "العودة للقائمة" on create/edit pages.
+
+Below `sm` the title moves to the shell header (the `<h1>` stays, `sr-only`), and on list pages the row becomes the toolbar: search, filters button, add icon (`FiltersBar` portals its controls into the page header's slot). When nothing is left to show (e.g. the dashboard) the row is taken out of the flow.
 
 ## Components
 
@@ -115,7 +117,9 @@ Title (and optional subtitle / record count) at the start; the page's main actio
 
 `recharts` (`src/features/dashboard/components/charts.tsx` is the reference). Single-series bars in **`chart-1` = `#C27E00`** — a darker step of the primary: `#FFA800` is 1.9:1 on white, below the 3:1 a data mark needs (checked with the dataviz validator). Bars ≤ 24px with a 4px rounded data end; hairline grid in `border`; axis text `muted-text`; hover tooltip; an `sr-only` table with the same values. No legend for a single series — the card title names it.
 
-RTL: categories start on the right (`reversed` x-axis, `orientation="right"` y-axis) and horizontal bars grow leftwards. **SVG text inherits the page's RTL direction, which swaps recharts' `textAnchor`**, so axis ticks and bar-end labels that sit beside something are custom components with the anchor written for RTL (`CategoryTick`, `ValueTick`, `BarEndLabel`). Axis numbers use `formatCompact` ("17.3 ألف", "3.2 مليون"); tooltips use `formatNumber`. Every chart has an empty state ("لا توجد بيانات").
+RTL: categories start on the right (`reversed` x-axis, `orientation="right"` y-axis). **SVG text inherits the page's RTL direction, which swaps recharts' `textAnchor`**, so value ticks are a custom component with the anchor written for RTL (`ValueTick`). Axis numbers use `formatCompact` ("17.3 ألف", "3.2 مليون"); tooltips use `formatNumber`. Every chart has an empty state ("لا توجد بيانات").
+
+Ranked categories (أكثر الأقسام قراءة) are not a recharts chart: their views are heavily skewed (millions vs tens), so they are an HTML list of progress bars — name and exact views (`formatNumber`) above an 8px `primary-muted` track, the `chart-1` fill sized relative to the top category, with a minimum sliver for any non-zero value.
 
 ## Motion
 

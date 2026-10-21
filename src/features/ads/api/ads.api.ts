@@ -124,17 +124,13 @@ export async function getAd(id: number) {
   return mapAdDetails(await apiGet<unknown>(endpoints.ads.details(id)))
 }
 
-// ⚠ TBD: the replies of add / edit / changeActive / delete are unknown; any non-error reply counts as success.
+// ⚠ TBD: the replies of add / edit / delete are unknown; any non-error reply counts as success.
 export function createAd(values: AdFormValues) {
   return apiPost<unknown>(endpoints.ads.add, toAdSaveRequest(values))
 }
 
 export function updateAd(id: number, values: AdFormValues) {
   return apiPost<unknown>(endpoints.ads.edit, toAdSaveRequest(values, id))
-}
-
-export function toggleAd(id: number) {
-  return apiGet<unknown>(endpoints.ads.changeActive(id))
 }
 
 export function deleteAd(id: number) {

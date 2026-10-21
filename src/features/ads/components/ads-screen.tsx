@@ -2,14 +2,15 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ImageOffIcon, PencilIcon, PlusIcon, ToggleRightIcon, Trash2Icon } from "lucide-react"
+import { ImageOffIcon, PencilIcon, Trash2Icon } from "lucide-react"
 import { cn } from "cn"
 
+import { AddButton } from "@/components/ui/add-button"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table"
-import { FilterItem, FiltersBar } from "@/components/ui/filters-bar"
+import { countActive, FilterItem, FiltersBar } from "@/components/ui/filters-bar"
 import { FilterSelect } from "@/components/ui/filter-select"
 import { IconAction } from "@/components/ui/icon-action"
 import { PageHeader } from "@/components/ui/page-header"
@@ -17,7 +18,7 @@ import { SearchInput } from "@/components/ui/search-input"
 import { ForbiddenState } from "@/components/ui/states"
 import { StatusBadge } from "@/components/ui/status-badge"
 import type { AdItem } from "@/features/ads/api/ads.api"
-import { useAdFilters, useAdsList, useDeleteAd, useToggleAd } from "@/features/ads/hooks/use-ads"
+import { useAdFilters, useAdsList, useDeleteAd } from "@/features/ads/hooks/use-ads"
 import { formatDate, formatNumber } from "@/lib/format"
 import { activeStatus, adType } from "@/lib/labels"
 import { messages } from "@/lib/messages"
@@ -28,7 +29,6 @@ function todayIso() {
 }
 
 function AdRowActions({ ad }: { ad: AdItem }) {
-  const toggle = useToggleAd()
   const remove = useDeleteAd()
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const name = ad.title || `الإعلان رقم ${ad.id}`
@@ -40,17 +40,6 @@ function AdRowActions({ ad }: { ad: AdItem }) {
           <Link href={`/ads/${ad.id}/edit`} aria-label={`${messages.actions.edit}: ${name}`}>
             <PencilIcon />
           </Link>
-        </Button>
-      </IconAction>
-      <IconAction label={ad.active ? "إيقاف" : "تفعيل"}>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label={`${ad.active ? "إيقاف" : "تفعيل"}: ${name}`}
-          disabled={toggle.isPending}
-          onClick={() => toggle.mutate({ id: ad.id })}
-        >
-          <ToggleRightIcon />
         </Button>
       </IconAction>
       <IconAction label={messages.actions.delete}>
@@ -102,7 +91,12 @@ function columns(today: string): DataTableColumn<AdItem>[] {
       header: "العنوان",
       className: "min-w-44",
       cell: (a) => (
-        <Link href={`/ads/${a.id}/edit`} className="font-medium text-foreground hover:text-primary-ink hover:underline" dir="auto">
+        <Link
+          href={`/ads/${a.id}/edit`}
+          title={a.title || undefined}
+          className="line-clamp-2 font-medium text-foreground hover:text-primary-ink hover:underline"
+          dir="auto"
+        >
           {a.title || "—"}
         </Link>
       ),
@@ -143,20 +137,15 @@ export function AdsScreen() {
     <div className="flex flex-col gap-4 md:gap-6">
       <PageHeader
         title="الإعلانات"
-        actions={
-          <Button asChild>
-            <Link href="/ads/new">
-              <PlusIcon data-icon="inline-start" />
-              {messages.actions.add}
-            </Link>
-          </Button>
-        }
+        actions={<AddButton href="/ads/new" />}
       />
       <Card className="gap-0 py-0">
-        <FiltersBar hasActiveFilters={hasActiveFilters} onClear={clear}>
-          <FilterItem className="sm:w-72">
-            <SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في العناوين…" />
-          </FilterItem>
+        <FiltersBar
+          search={<SearchInput value={filters.search} onChange={setSearch} placeholder="بحث في العناوين…" />}
+          activeCount={countActive(filters.type, filters.active)}
+          hasActiveFilters={hasActiveFilters}
+          onClear={clear}
+        >
           <FilterItem>
             <FilterSelect<0 | 1 | 2>
               aria-label="النوع"

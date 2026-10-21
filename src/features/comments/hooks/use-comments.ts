@@ -9,7 +9,6 @@ import {
   getComment,
   listComments,
   saveComment,
-  toggleComment,
   type CommentItem,
   type CommentListFilters,
 } from "@/features/comments/api/comments.api"
@@ -82,29 +81,6 @@ export function useSaveComment(id: number) {
   return useMutation<unknown, ApiError, { comment: string; active: boolean }>({
     mutationFn: (values) => saveComment(id, values),
     onSuccess: () => invalidate(id),
-  })
-}
-
-export function useToggleComment() {
-  const queryClient = useQueryClient()
-  const invalidate = useInvalidate()
-  return useMutation<unknown, ApiError, { id: number }, { rollback: () => void }>({
-    mutationFn: ({ id }) => toggleComment(id),
-    // Flip the badge right away; undo it if the server refuses.
-    onMutate: async ({ id }) => {
-      await queryClient.cancelQueries({ queryKey: commentKeys.lists() })
-      const snapshot = queryClient.getQueriesData<ListResult<CommentItem>>({ queryKey: commentKeys.lists() })
-      queryClient.setQueriesData<ListResult<CommentItem>>({ queryKey: commentKeys.lists() }, (old) =>
-        old ? { ...old, items: old.items.map((c) => (c.id === id ? { ...c, active: !c.active } : c)) } : old,
-      )
-      return { rollback: () => snapshot.forEach(([key, data]) => queryClient.setQueryData(key, data)) }
-    },
-    onError: (error, _vars, context) => {
-      context?.rollback()
-      toast.error(error.message)
-    },
-    onSuccess: () => toast.success(messages.toasts.statusChanged),
-    onSettled: (_d, _e, { id }) => invalidate(id),
   })
 }
 

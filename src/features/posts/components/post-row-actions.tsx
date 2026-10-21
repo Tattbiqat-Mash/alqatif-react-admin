@@ -2,38 +2,20 @@
 
 import * as React from "react"
 import Link from "next/link"
-import {
-  CheckIcon,
-  ExternalLinkIcon,
-  MessageSquareIcon,
-  PencilIcon,
-  PinIcon,
-  PinOffIcon,
-  ToggleRightIcon,
-  Trash2Icon,
-} from "lucide-react"
-import { cn } from "cn"
+import { BellIcon, ExternalLinkIcon, MessageSquareIcon, PencilIcon, Trash2Icon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { IconAction } from "@/components/ui/icon-action"
 import { contentEditHref, publicPostUrl, type ContentTypeConfig } from "@/config/content-types"
-import { useChangePostStatus, useDeletePost, useTogglePostPinned } from "@/features/posts/hooks/use-posts"
-import type { PostListItem, PostStatus } from "@/features/posts/types/posts.types"
-import { postStatus } from "@/lib/labels"
+import { useDeletePost, useSendPostNotification } from "@/features/posts/hooks/use-posts"
+import type { PostListItem } from "@/features/posts/types/posts.types"
 import { messages } from "@/lib/messages"
 
 export function PostRowActions({ post, content }: { post: PostListItem; content: ContentTypeConfig }) {
-  const changeStatus = useChangePostStatus()
-  const togglePinned = useTogglePostPinned()
+  const sendNotification = useSendPostNotification()
   const deletePost = useDeletePost()
+  const [confirmNotify, setConfirmNotify] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
 
   return (
@@ -46,42 +28,15 @@ export function PostRowActions({ post, content }: { post: PostListItem; content:
         </Button>
       </IconAction>
 
-      <DropdownMenu>
-        <IconAction label="تغيير الحالة">
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm" aria-label="تغيير الحالة" disabled={changeStatus.isPending}>
-              <ToggleRightIcon />
-            </Button>
-          </DropdownMenuTrigger>
-        </IconAction>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>تغيير الحالة</DropdownMenuLabel>
-          {postStatus.options.map((option) => {
-            const current = option.value === post.status
-            return (
-              <DropdownMenuItem
-                key={option.value}
-                disabled={current}
-                onSelect={() => changeStatus.mutate({ id: post.id, status: option.value as PostStatus })}
-              >
-                <CheckIcon className={cn(!current && "invisible")} aria-hidden />
-                {option.label}
-              </DropdownMenuItem>
-            )
-          })}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <IconAction label={post.pinned ? "إلغاء التثبيت" : "تثبيت"}>
+      <IconAction label="إرسال إشعار">
         <Button
           variant="ghost"
           size="icon-sm"
-          aria-label={post.pinned ? "إلغاء التثبيت" : "تثبيت"}
-          aria-pressed={post.pinned}
-          disabled={togglePinned.isPending}
-          onClick={() => togglePinned.mutate({ id: post.id, pinned: !post.pinned })}
+          aria-label={`إرسال إشعار: ${post.title}`}
+          disabled={sendNotification.isPending}
+          onClick={() => setConfirmNotify(true)}
         >
-          {post.pinned ? <PinOffIcon /> : <PinIcon />}
+          <BellIcon />
         </Button>
       </IconAction>
 
@@ -112,6 +67,18 @@ export function PostRowActions({ post, content }: { post: PostListItem; content:
           <Trash2Icon />
         </Button>
       </IconAction>
+
+      <ConfirmDialog
+        open={confirmNotify}
+        onOpenChange={setConfirmNotify}
+        title="إرسال إشعار"
+        description={`سيُرسل إشعار بـ«${post.title}» لجميع مستخدمي التطبيق. متابعة؟`}
+        confirmLabel="إرسال"
+        pending={sendNotification.isPending}
+        onConfirm={() =>
+          sendNotification.mutate({ id: post.id }, { onSettled: () => setConfirmNotify(false) })
+        }
+      />
 
       <ConfirmDialog
         open={confirmDelete}

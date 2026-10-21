@@ -8,9 +8,11 @@ Page shape:
 
 ```tsx
 <div className="flex flex-col gap-4 md:gap-6">
-  <PageHeader title="الأخبار" action={can(...) && <AddButton href=".../new" />} />
+  <PageHeader title="الأخبار" actions={can(...) && <AddButton href=".../new" />} />
   <Card>
-    <FiltersBar />   {/* values in the URL via nuqs */}
+    <FiltersBar search={<SearchInput … />} activeCount={countActive(…)}>
+      <FilterItem>…</FilterItem>   {/* values in the URL via nuqs */}
+    </FiltersBar>
     <XTable />       {/* renders <DataTable /> */}
   </Card>
 </div>
@@ -43,10 +45,12 @@ One shared table for every list. Build features by passing props, never a raw `<
 - Selects default to "الكل" / "كل …" (e.g. "كل التصنيفات"), which means the parameter is not sent.
 - Filters apply immediately on change (no "بحث" button), reset the page to 1, and live in the URL so a view is shareable and survives reload.
 - A "مسح الفلاتر" link appears when any filter is set.
+- Phones (below `sm`): the search (`search` prop) moves up into the page header row, beside the add button, and the other filters (`children`) move to a "الفلاتر" dialog behind an icon button next to it that shows how many are set (`activeCount`, via `countActive`). The dialog has "تم" and "مسح الفلاتر"; filters still apply on change. The filters render in one place only (`useMediaQuery(SM_UP)`), so ids and debounces are never doubled. Chips that must stay visible (e.g. "تعليقات الخبر رقم …") go in `extra`.
+- The page's add action is `<AddButton href>` (`@/components/ui/add-button`): "+ إضافة" from `sm`, a 40px "+" icon on phones (label kept for screen readers and as `title`).
 
 ### Row actions
 
-Icon buttons (ghost, 32px, `aria-label` + tooltip) in the actions column, in this order: edit, toggle status, feature-specific actions, delete. Delete is `text-danger-ink`. Clicking the title also opens the edit page.
+Icon buttons (ghost, 32px, `aria-label` + tooltip) in the actions column, in this order: edit, feature-specific actions, delete. No list has a status toggle in its rows (user's decision) — statuses are changed in the edit form. Delete is `text-danger-ink`. Clicking the title also opens the edit page.
 
 Forbidden: when the admin lacks the permission, or the query fails with `403`, render `<ForbiddenState />` instead of the card.
 

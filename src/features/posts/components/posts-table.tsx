@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { EyeIcon } from "lucide-react"
-import { cn } from "cn"
 
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table"
 import { StatusBadge } from "@/components/ui/status-badge"
@@ -13,8 +12,6 @@ import { formatDateTime, formatNumber } from "@/lib/format"
 import { pinned as pinnedLabels, postStatus } from "@/lib/labels"
 
 function columns(content: ContentTypeConfig): DataTableColumn<PostListItem>[] {
-  // Short-text sections (jobs, thanks, lost & found): the title is the whole post.
-  const shortText = content.type === 3
   return [
     {
       id: "id",
@@ -31,10 +28,7 @@ function columns(content: ContentTypeConfig): DataTableColumn<PostListItem>[] {
           <Link
             href={contentEditHref(content.slug, post.id)}
             title={post.title}
-            className={cn(
-              "font-medium text-foreground underline-offset-4 hover:text-primary-ink hover:underline",
-              shortText ? "line-clamp-3" : "line-clamp-2",
-            )}
+            className="line-clamp-2 font-medium text-foreground underline-offset-4 hover:text-primary-ink hover:underline"
           >
             {post.title}
           </Link>

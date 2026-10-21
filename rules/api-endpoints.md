@@ -47,7 +47,7 @@ Field notes in Arabic are copied from the collection's own descriptions. **Respo
 | GET | `/admin/posts/getKhtmat/{postId}` | khatma details of a post |
 | POST | `/admin/posts/changePostEditor` | `id` — claim the post for editing (⚠ TBD behaviour: likely an edit lock) |
 | POST | `/admin/posts/freePostEditor` | `id` — release the claim |
-| GET | `/admin/posts/sendPostNotification/{id}` | push a notification for a post |
+| GET | `/admin/posts/sendPostNotification/{id}` | push a notification for a post — the bell in the posts list's row actions (confirm first). ⚠ TBD: reply shape (any non-error reply counts as success) |
 | POST | `/admin/posts/uploadImage` | multipart `attachment` |
 | POST | `/admin/posts/uploadMultipleImages` | multipart `images[]` |
 | GET | `/admin/posts/listImages/{page}` | image gallery ("من معرض الصور") — `{ status, pages, files: [full URLs] }`, 40 per page, newest first; **`{page}` starts at 1** ([sample](api-samples/posts-list-images.json)). A picked URL is stored as is (full URL) |
@@ -114,7 +114,7 @@ Known `type=3` categories (from the live admin, `/v1`): وظائف `79` · مف�
 | POST | `/admin/comments/list` | `page`, `postId`, `commentUser`, `search`, `active` |
 | GET | `/admin/comments/getDetails/{id}` | |
 | POST | `/admin/comments/edit` | `id`, `comment`, `active` |
-| GET | `/admin/comments/changeActive/{id}` | toggles |
+| GET | `/admin/comments/changeActive/{id}` | toggles — not used by the app (no toggle in the list; the edit page sends `active`) |
 | GET | `/admin/comments/delete/{id}` | |
 
 Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
@@ -127,7 +127,7 @@ Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 | GET | `/admin/ads/getDetails/{id}` | |
 | POST | `/admin/ads/add` | `title`, `type`, `kind`, `image`, `link`, `postId`, `requiredViews`, `categories`, `startDate`, `endDate`, `active` |
 | POST | `/admin/ads/edit` | `id` + same fields |
-| GET | `/admin/ads/changeActive/{id}` | toggles |
+| GET | `/admin/ads/changeActive/{id}` | toggles — not used by the app (no toggle in the list; the ad form sends `active`) |
 | GET | `/admin/ads/delete/{id}` | |
 | POST | `/admin/ads/uploadImage` | multipart `attachment` |
 
@@ -148,7 +148,7 @@ Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 | GET | `/admin/admins/getDetails/{id}` | |
 | POST | `/admin/admins/add` | `userName`, `displayName`, `password`, `email`, `type`, `active`, `allowPosts`, `allowComments`, `allowAds`, `allowAdmins`, `allowNotifications`, `allowSurveys`, `allowSettings` |
 | POST | `/admin/admins/edit` | `id` + same fields (⚠ TBD: whether an empty `password` keeps the current one) |
-| GET | `/admin/admins/changeActive/{id}` | toggles |
+| GET | `/admin/admins/changeActive/{id}` | toggles — not used by the app (no toggle in the list; the editor form sends `active`) |
 | GET | `/admin/admins/delete/{id}` | |
 
 - `list` response ([sample](api-samples/admins-list.json), types in `src/features/editors/types/editors.dto.ts`): the list envelope with rows `id`, `type`, `userName`, `displayName`, `active` — **no password** (unlike the login response). The "كل المحررين" filter on content lists calls it with `page` only (no `type`) and reads every page. ⚠ TBD: that omitting `type` returns both أدمن and أدمن فرعي (the sample had type 0 only), and what a sub-admin without `allowAdmins` gets (a 403 would leave the filter empty).
@@ -175,7 +175,7 @@ Comment `active`: `0` موقوف · `1` منشور (⚠ TBD — confirm labels).
 | POST | `/admin/surveys/addQuestion` | `surveyId`, `question` |
 | POST | `/admin/surveys/editQuestion` | `id`, `question` |
 | GET | `/admin/surveys/deleteQuestion/{id}` | |
-| GET | `/admin/surveys/changeActive/{id}` | toggles |
+| GET | `/admin/surveys/changeActive/{id}` | toggles — not used by the app (no toggle in the list; the survey form sends `active`) |
 | GET | `/admin/surveys/delete/{id}` | |
 
 - "questions" are the survey's **answer options** (الإجابات).

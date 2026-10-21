@@ -2,13 +2,8 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import { toast } from "sonner"
 
 import type { ContentTypeConfig } from "@/config/content-types"
-import {
-  changePostStatus,
-  deletePost,
-  listPosts,
-  togglePostPinned,
-} from "@/features/posts/api/posts.api"
-import type { PostListFilters, PostListItem, PostStatus } from "@/features/posts/types/posts.types"
+import { deletePost, listPosts, sendPostNotification } from "@/features/posts/api/posts.api"
+import type { PostListFilters, PostListItem } from "@/features/posts/types/posts.types"
 import type { ListResult } from "@/lib/api/list"
 import type { ApiError } from "@/lib/api/errors"
 import { messages } from "@/lib/messages"
@@ -82,19 +77,12 @@ function useListMutation<TVars extends { id: number }>(options: {
   })
 }
 
-export function useChangePostStatus() {
-  return useListMutation<{ id: number; status: PostStatus }>({
-    mutationFn: ({ id, status }) => changePostStatus(id, status),
-    patch: (post, { status }) => ({ ...post, status }),
-    successMessage: messages.toasts.statusChanged,
-  })
-}
-
-export function useTogglePostPinned() {
-  return useListMutation<{ id: number; pinned: boolean }>({
-    mutationFn: ({ id }) => togglePostPinned(id),
-    patch: (post, { pinned }) => ({ ...post, pinned }),
-    successMessage: "تم تحديث التثبيت",
+/** Pushes a notification for the post to the app's users. Changes nothing in the lists. */
+export function useSendPostNotification() {
+  return useMutation<unknown, ApiError, { id: number }>({
+    mutationFn: ({ id }) => sendPostNotification(id),
+    onError: (error) => toast.error(error.message),
+    onSuccess: () => toast.success("تم إرسال الإشعار"),
   })
 }
 

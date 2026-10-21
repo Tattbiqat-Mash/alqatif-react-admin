@@ -4,7 +4,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -19,52 +18,24 @@ import { formatCompact, formatNumber } from "@/lib/format"
  * Single-series bar charts (rules/design-system.md#charts-dashboard):
  * one hue (--chart-1), bars ≤ 24px with a 4px rounded data end, hairline grid,
  * hover tooltip, and an sr-only table for screen readers. Mirrored for RTL:
- * categories start on the right and bars grow leftwards.
+ * categories start on the right. The ranked categories are an HTML bar list
+ * instead (see HorizontalBarChart).
  */
 
 const AXIS_TICK = { fill: "var(--muted-text)", fontSize: 12 }
-const ROW_HEIGHT = 36
 
 /*
  * SVG text inherits the page's RTL direction, which swaps recharts' LTR-based
- * text anchors ("start" becomes the right edge). The two labels that sit beside
+ * text anchors ("start" becomes the right edge). Value ticks that sit beside
  * something are therefore drawn here with the anchor stated for RTL.
  */
 type TickProps = { x?: number | string; y?: number | string; payload?: { value?: string | number } }
-
-/** Category name in the right-hand axis area, extending rightwards from the plot. */
-function CategoryTick({ x, y, payload }: TickProps) {
-  return (
-    <text x={Number(x)} y={Number(y)} dy={4} textAnchor="end" fill="var(--muted-text)" fontSize={12}>
-      {payload?.value}
-    </text>
-  )
-}
 
 /** Value tick on a right-hand Y axis, extending rightwards (away from the bars). */
 function ValueTick({ x, y, payload }: TickProps) {
   return (
     <text x={Number(x)} y={Number(y)} dy={4} textAnchor="end" fill="var(--muted-text)" fontSize={12}>
       {formatCompact(Number(payload?.value))}
-    </text>
-  )
-}
-
-type BarLabelProps = { x?: number | string; y?: number | string; width?: number | string; height?: number | string; value?: unknown }
-
-/** Value just past the bar's data end (its left side in RTL). */
-function BarEndLabel({ x, y, width, height, value }: BarLabelProps) {
-  const left = Math.min(Number(x), Number(x) + Number(width))
-  return (
-    <text
-      x={left - 6}
-      y={Number(y) + Number(height) / 2}
-      dy={4}
-      textAnchor="start"
-      fill="var(--muted-text)"
-      fontSize={12}
-    >
-      {formatCompact(Number(value))}
     </text>
   )
 }
@@ -112,41 +83,42 @@ type ChartProps = {
   labelHeader: string
 }
 
-/** Ranked categories: long Arabic names on the right, bars growing left, value at the tip. */
-export function HorizontalBarChart({ data, caption, labelHeader }: ChartProps) {
+/**
+ * Ranked categories as a list of progress bars: name and exact views above a
+ * full-width track, the fill relative to the top category. Category views are
+ * heavily skewed (millions vs tens), so the track keeps every row readable and
+ * a non-zero value always gets a visible sliver. Plain HTML, so the text is
+ * already accessible and needs no sr-only table.
+ */
+export function HorizontalBarChart({ data, caption }: ChartProps) {
+  const max = Math.max(...data.map((p) => p.views), 0)
   return (
     <figure>
-      <div aria-hidden style={{ height: data.length * ROW_HEIGHT + 32 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ top: 0, right: 0, bottom: 0, left: 64 }} barCategoryGap={10}>
-            <CartesianGrid horizontal={false} stroke="var(--border)" />
-            <XAxis
-              type="number"
-              reversed
-              tickFormatter={formatCompact}
-              tick={AXIS_TICK}
-              axisLine={false}
-              tickLine={false}
-              tickCount={4}
-            />
-            <YAxis
-              type="category"
-              dataKey="label"
-              orientation="right"
-              width={120}
-              tick={CategoryTick}
-              axisLine={false}
-              tickLine={false}
-              interval={0}
-            />
-            <Tooltip cursor={{ fill: "var(--surface-muted)" }} content={ChartTooltip} />
-            <Bar dataKey="views" fill="var(--chart-1)" maxBarSize={18} radius={[4, 0, 0, 4]} isAnimationActive={false}>
-              <LabelList dataKey="views" content={BarEndLabel} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <ChartTable data={data} caption={caption} labelHeader={labelHeader} />
+      <figcaption className="sr-only">{caption}</figcaption>
+      <ol className="flex flex-col gap-3.5">
+        {data.map((point) => {
+          const percent = max > 0 ? (point.views / max) * 100 : 0
+          return (
+            <li key={point.label} className="flex flex-col gap-1.5">
+              <div className="flex items-baseline justify-between gap-3 text-sm">
+                <span className="truncate font-medium text-foreground" title={point.label}>
+                  {point.label}
+                </span>
+                <span className="shrink-0 tabular-nums text-muted-text">
+                  {formatNumber(point.views)}
+                  <span className="sr-only"> مشاهدة</span>
+                </span>
+              </div>
+              <div aria-hidden className="h-2 overflow-hidden rounded-full bg-primary-muted">
+                <div
+                  className={point.views > 0 ? "h-full min-w-1 rounded-full bg-chart-1" : "h-full"}
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+            </li>
+          )
+        })}
+      </ol>
     </figure>
   )
 }

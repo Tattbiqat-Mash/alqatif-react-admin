@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "cn"
 
 import { Header } from "@/components/layout/header"
+import { PageChromeProvider } from "@/components/layout/page-chrome"
 import { DesktopSidebar, MobileSidebar } from "@/components/layout/sidebar"
 import { useSidebarCollapsed } from "@/components/layout/use-sidebar-collapsed"
 
@@ -30,10 +31,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           collapsed ? "lg:ps-20" : "lg:ps-64",
         )}
       >
-        <Header onOpenMenu={() => setMobileOpen(true)} />
-        <main ref={mainRef} className="min-h-0 min-w-0 flex-1 overflow-y-auto p-4 md:p-6">
-          {children}
-        </main>
+        <PageChromeProvider>
+          <Header onOpenMenu={() => setMobileOpen(true)} />
+          <main ref={mainRef} className="min-h-0 min-w-0 flex-1 overflow-y-auto p-4 md:p-6">
+            {children}
+          </main>
+        </PageChromeProvider>
       </div>
     </div>
   )

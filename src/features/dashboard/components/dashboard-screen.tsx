@@ -89,19 +89,24 @@ function TopPostsPanel({ posts, loading }: { posts: TopPost[] | undefined; loadi
       ) : !posts || posts.length === 0 ? (
         <EmptyState className="py-10" />
       ) : (
-        <ol className="flex flex-col divide-y divide-border">
+        <ol className="@container flex flex-col divide-y divide-border">
           {posts.map((post, index) => (
-            <li key={`${index}-${post.title}`} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+            // In a narrow card (phones, and the two-column grid at lg) the views badge drops
+            // under the title so the title gets the full width.
+            <li
+              key={`${index}-${post.title}`}
+              className="grid grid-cols-[auto_1fr] items-start gap-x-3 gap-y-1.5 py-3 first:pt-0 last:pb-0 @sm:grid-cols-[auto_1fr_auto]"
+            >
               <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-muted text-xs font-medium text-muted-text">
                 {formatNumber(index + 1)}
               </span>
-              <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <div className="flex min-w-0 flex-col gap-1">
                 <p className="line-clamp-2 text-sm font-medium text-foreground" title={post.title}>
                   {post.title}
                 </p>
                 {post.category && <p className="text-xs text-primary-ink">{post.category}</p>}
               </div>
-              <span className="flex shrink-0 items-center gap-1 rounded-full bg-neutral-muted px-2 py-0.5 text-xs font-medium text-neutral-ink">
+              <span className="col-start-2 flex items-center gap-1 justify-self-start rounded-full @sm:col-start-auto bg-neutral-muted px-2 py-0.5 text-xs font-medium text-neutral-ink">
                 <EyeIcon aria-hidden className="size-3.5" />
                 {formatNumber(post.views)}
                 <span className="sr-only">مشاهدة</span>

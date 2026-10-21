@@ -13,7 +13,7 @@ Screenshots: [`09-editor-edit.png`](screenshots/09-editor-edit.png) · [`09-edit
 ## Scope
 
 - `src/app/(admin)/editors/{page,new/page,[id]/edit/page}.tsx`, `src/features/editors/*`
-- Endpoints: `admins/list`, `getDetails`, `add`, `edit`, `changeActive`, `delete` — [api-endpoints.md](../api-endpoints.md#editors-admins--adminadmins)
+- Endpoints: `admins/list`, `getDetails`, `add`, `edit`, `delete` — [api-endpoints.md](../api-endpoints.md#editors-admins--adminadmins)
 - Permission: `allowAdmins`
 
 ## Requirements
@@ -22,8 +22,10 @@ Screenshots: [`09-editor-edit.png`](screenshots/09-editor-edit.png) · [`09-edit
 
 - Page header "المحررين" + "إضافة".
 - Filters (URL): بحث (`search`), النوع (`type`), الحالة (`active`) — the old page had none; the endpoint supports them.
-- Columns: اسم المستخدم (`userName`, LTR) · الاسم الظاهر (`displayName`) · النوع · الحالة (`StatusBadge` فعال / موقوف) · التحكم (تعديل, تغيير الحالة, حذف).
-- The signed-in admin's own row: no delete and no deactivate button.
+- Columns: اسم المستخدم (`userName`, LTR) · الاسم الظاهر (`displayName`) · النوع · الحالة (`StatusBadge` فعال / موقوف) · التحكم (تعديل, أخبار المحرر, حذف).
+- No activate/stop toggle in the row (user's decision) — the status is changed in the form.
+- أخبار المحرر (`Newspaper`): a link to `/content/news?editor=<id>` (the news list's المحرر filter); shown only with `allowPosts`.
+- The signed-in admin's own row: no delete button.
 
 ### Form
 
@@ -37,7 +39,7 @@ Screenshots: [`09-editor-edit.png`](screenshots/09-editor-edit.png) · [`09-edit
 | الحالة * | select | فعال / موقوف |
 | الصلاحيات * | checkbox group | المواضيع، التعليقات، الإعلانات، المحررين، الإشعارات، الاستبيانات، الإعدادات → `allow*` flags; at least one required for أدمن فرعي; hidden (all on) for أدمن ⚠ |
 
-- Deactivating (in the list or by setting الحالة = موقوف) asks for confirmation naming the editor.
+- Deactivating (setting الحالة = موقوف in the form) asks for confirmation naming the editor.
 - If the admin edits their own permissions, refresh their session profile after save.
 
 > **Status:** built (`src/features/editors/`). List on the `admins/list` sample; add/edit bodies match the collection. `admins/getDetails` is read **provisionally** as the login's admin record (under `data` or at the root). On edit an empty password is **not sent at all**, so the server never receives a blank one. Email validation is lenient (`x@y`) because existing accounts have addresses like `m1m@mm.com1`. Your own account: no deactivate/delete in the list, type and status locked in the form, and the session profile updates after saving. Verified end-to-end on a local mock (list actions, edit without password, create validation and body).
@@ -52,7 +54,7 @@ Screenshots: [`09-editor-edit.png`](screenshots/09-editor-edit.png) · [`09-edit
 
 ## Acceptance criteria
 
-- [ ] List, create, edit, toggle and delete build the right requests; the user confirms on `/v2`.
+- [ ] List, create, edit and delete build the right requests; the user confirms on `/v2`.
 - [ ] Password rules differ between create and edit as described.
 - [ ] An admin cannot delete or deactivate themselves from the UI.
 - [ ] `pnpm check` passes.

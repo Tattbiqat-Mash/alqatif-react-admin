@@ -11,6 +11,7 @@ export const messages = {
     retry: "إعادة المحاولة",
     backToList: "العودة للقائمة",
     clearFilters: "مسح الفلاتر",
+    done: "تم",
     logout: "خروج",
   },
   states: {

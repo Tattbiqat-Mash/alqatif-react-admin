@@ -35,7 +35,7 @@ Screenshots: [`08-ad-edit-1.png`](screenshots/08-ad-edit-1.png) · [`08-ad-edit-
 | تاريخ النهاية | `endDate` — `text-danger-ink` when already past |
 | عدد مرات الظهور | views count |
 | الحالة | `StatusBadge` فعال / غير فعال |
-| التحكم | تعديل, تغيير الحالة (toggle), حذف (confirm) |
+| التحكم | تعديل, حذف (confirm). No activate/stop toggle in the row (user's decision) — the status is changed in the ad form |
 
 ### Form
 
@@ -63,7 +63,7 @@ Screenshots: [`08-ad-edit-1.png`](screenshots/08-ad-edit-1.png) · [`08-ad-edit-
 
 ## Acceptance criteria
 
-- [ ] List with both filters, toggle, delete; create and edit with image upload build the right requests; the user confirms on `/v2`.
+- [ ] List with both filters and delete; create and edit with image upload build the right requests; the user confirms on `/v2`.
 - [ ] Conditional fields switch with "طبيعة العمل"; the hidden field is not sent.
 - [ ] Date validation in Arabic.
 - [ ] `pnpm check` passes.

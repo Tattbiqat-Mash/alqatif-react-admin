@@ -56,13 +56,9 @@ export async function listPosts(
   return normalizeList(raw, filters.page, mapPostListItem)
 }
 
-// ⚠ TBD: the responses of these three are unknown; any non-error reply counts as success.
-export function changePostStatus(id: number, status: PostStatus) {
-  return apiGet<unknown>(endpoints.posts.changeActive(id, status))
-}
-
-export function togglePostPinned(id: number) {
-  return apiGet<unknown>(endpoints.posts.changeFixed(id))
+// ⚠ TBD: the responses of these two are unknown; any non-error reply counts as success.
+export function sendPostNotification(id: number) {
+  return apiGet<unknown>(endpoints.posts.sendNotification(id))
 }
 
 export function deletePost(id: number) {

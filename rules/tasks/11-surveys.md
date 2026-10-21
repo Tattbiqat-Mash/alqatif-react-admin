@@ -13,7 +13,7 @@ Screenshots: [`11-survey-edit.png`](screenshots/11-survey-edit.png) · [`11-surv
 ## Scope
 
 - `src/app/(admin)/surveys/{page,new/page,[id]/edit/page}.tsx`, `src/features/surveys/*`
-- Endpoints: `surveys/list`, `getDetails`, `add`, `edit`, `addQuestion`, `editQuestion`, `deleteQuestion`, `changeActive`, `delete` — [api-endpoints.md](../api-endpoints.md#surveys--adminsurveys)
+- Endpoints: `surveys/list`, `getDetails`, `add`, `edit`, `addQuestion`, `editQuestion`, `deleteQuestion`, `delete` — [api-endpoints.md](../api-endpoints.md#surveys--adminsurveys)
 - Permission: `allowSurveys`
 
 ## Requirements
@@ -22,7 +22,7 @@ Screenshots: [`11-survey-edit.png`](screenshots/11-survey-edit.png) · [`11-surv
 
 - Page header "الاستبيانات" + "إضافة".
 - Filters (URL): بحث, الحالة.
-- Columns: م · العنوان (links to edit) · التصنيف · تاريخ ووقت النشر · الحالة · عدد الإجابات · التحكم (تعديل, تغيير الحالة, حذف).
+- Columns: م · العنوان (links to edit) · التصنيف · تاريخ ووقت النشر · الحالة · عدد الإجابات · التحكم (تعديل, حذف). No activate/stop toggle in the row (user's decision) — the status is changed in the form.
 
 ### Form
 

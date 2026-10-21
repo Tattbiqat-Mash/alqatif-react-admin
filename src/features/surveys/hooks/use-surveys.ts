@@ -12,7 +12,6 @@ import {
   editAnswer,
   getSurvey,
   listSurveys,
-  toggleSurvey,
   updateSurvey,
   type SurveyDetails,
   type SurveyItem,
@@ -87,22 +86,15 @@ export function useSaveSurvey(id: number | null) {
   })
 }
 
-/** Toggle / delete from the list. */
-export function useSurveyRowMutations() {
+/** Delete from the list. */
+export function useDeleteSurvey() {
   const invalidate = useInvalidate()
-  const toggle = useMutation<unknown, ApiError, { id: number }>({
-    mutationFn: ({ id }) => toggleSurvey(id),
-    onSuccess: () => toast.success(messages.toasts.statusChanged),
-    onError: (error) => toast.error(error.message),
-    onSettled: (_d, _e, { id }) => invalidate(id),
-  })
-  const remove = useMutation<unknown, ApiError, { id: number }>({
+  return useMutation<unknown, ApiError, { id: number }>({
     mutationFn: ({ id }) => deleteSurvey(id),
     onSuccess: () => toast.success(messages.toasts.deleted),
     onError: (error) => toast.error(error.message),
     onSettled: (_d, _e, { id }) => invalidate(id),
   })
-  return { toggle, remove }
 }
 
 /** Answers on the edit page save one by one, immediately. */

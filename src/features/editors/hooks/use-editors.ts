@@ -7,7 +7,6 @@ import {
   getEditor,
   listAllEditors,
   listEditors,
-  toggleEditorActive,
   updateEditor,
   type EditorListFilters,
   type EditorListItem,
@@ -66,16 +65,6 @@ export function useSaveEditor(id: number | null) {
   return useMutation<unknown, ApiError, EditorFormValues>({
     mutationFn: (values) => (id === null ? createEditor(values) : updateEditor(id, values)),
     onSuccess: () => invalidate(id ?? undefined),
-  })
-}
-
-export function useToggleEditor() {
-  const invalidate = useInvalidateEditors()
-  return useMutation<unknown, ApiError, { id: number }>({
-    mutationFn: ({ id }) => toggleEditorActive(id),
-    onSuccess: () => toast.success(messages.toasts.statusChanged),
-    onError: (error) => toast.error(error.message),
-    onSettled: (_d, _e, { id }) => invalidate(id),
   })
 }
 

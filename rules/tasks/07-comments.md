@@ -30,7 +30,7 @@ Screenshots: [`07-comment-edit.png`](screenshots/07-comment-edit.png) · [`07-co
 | التعليق / الخبر / التاريخ | comment text (2 lines); below in small text: date-time · post title (`text-primary-ink`, links to the post's edit page) |
 | المستخدم | commenter name |
 | الحالة | `StatusBadge` |
-| التحكم | تعديل (`Pencil`), تغيير الحالة (`ToggleRight`, toggle), حذف (`Trash2`, confirm) |
+| التحكم | تعديل (`Pencil`), حذف (`Trash2`, confirm). No publish/stop toggle in the row (user's decision) — the status is changed in the edit page |
 
 ### Edit page
 
@@ -47,6 +47,6 @@ Screenshots: [`07-comment-edit.png`](screenshots/07-comment-edit.png) · [`07-co
 
 ## Acceptance criteria
 
-- [ ] List, filters, `postId` filter from the posts list, toggle, delete, and edit all build the right requests; the user confirms on `/v2`.
+- [ ] List, filters, `postId` filter from the posts list, delete, and edit all build the right requests; the user confirms on `/v2`.
 - [ ] Toggle updates the badge in place; delete asks for confirmation.
 - [ ] `pnpm check` passes.

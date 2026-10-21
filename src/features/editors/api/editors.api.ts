@@ -124,18 +124,13 @@ export async function getEditor(id: number) {
   return mapEditorDetails(await apiGet<unknown>(endpoints.editors.details(id)))
 }
 
-// ⚠ TBD: the replies of add / edit / changeActive / delete are unknown; any non-error reply counts as success.
+// ⚠ TBD: the replies of add / edit / delete are unknown; any non-error reply counts as success.
 export function createEditor(values: EditorFormValues) {
   return apiPost<unknown>(endpoints.editors.add, toEditorSaveRequest(values))
 }
 
 export function updateEditor(id: number, values: EditorFormValues) {
   return apiPost<unknown>(endpoints.editors.edit, toEditorSaveRequest(values, id))
-}
-
-/** Toggles فعال / موقوف. */
-export function toggleEditorActive(id: number) {
-  return apiGet<unknown>(endpoints.editors.changeActive(id))
 }
 
 export function deleteEditor(id: number) {
