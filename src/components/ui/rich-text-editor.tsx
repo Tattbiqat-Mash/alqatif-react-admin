@@ -427,7 +427,7 @@ const BASE_CONFIG: JoditConfig = {
   // content (a tweet, a video), so `<a href="URL">URL</a>` was embedded twice, and Jodit's video
   // embed turned a pasted YouTube link into an <iframe>.
   link: { processPastedLink: false, processVideoLink: false },
-  // Jodit's "image" button keeps only its URL tab; uploads and the gallery are the custom buttons below.
+  // Jodit's own "image" button is not in the toolbar; uploads and the gallery are the custom buttons below.
   uploader: { insertImageAsBase64URI: false },
   extraIcons: { textColor: TEXT_COLOR_ICON, backgroundColor: BACKGROUND_COLOR_ICON, quote: QUOTE_ICON },
 }
@@ -459,11 +459,10 @@ const BUTTONS_BEFORE_IMAGES: JoditButtons = [
   "justify",
   "|",
   "link",
-  "image",
 ]
 
 // Undo, redo and full screen sit in the bar above the toolbar, beside the mode switch.
-const BUTTONS_AFTER_IMAGES = ["video", "table", "hr"]
+const BUTTONS_AFTER_IMAGES = ["video", "hr"]
 
 /** Inserted images never overflow the post's column. */
 const INSERTED_IMAGE_STYLE = { maxWidth: "100%", height: "auto" }
@@ -597,6 +596,20 @@ export function RichTextEditor({
       savedRange.current = editor.s.isInsideArea ? editor.s.range.cloneRange() : null
     }
     const imageButtons: NonNullable<JoditConfig["buttons"]> = [
+      ...(hasGallery
+        ? [
+            {
+              name: "insertImageFromGallery",
+              icon: "image",
+              tooltip: "إدراج من معرض الصور",
+              mode: MODE_WYSIWYG,
+              exec: (editor: JoditInstance) => {
+                beforeImageAction(editor)
+                pickImageRef.current?.(insertImage)
+              },
+            },
+          ]
+        : []),
       ...(hasUpload
         ? [
             {
@@ -608,20 +621,6 @@ export function RichTextEditor({
                 if (uploadingRef.current) return
                 beforeImageAction(editor)
                 fileInputRef.current?.click()
-              },
-            },
-          ]
-        : []),
-      ...(hasGallery
-        ? [
-            {
-              name: "insertImageFromGallery",
-              icon: "folder",
-              tooltip: "إدراج من معرض الصور",
-              mode: MODE_WYSIWYG,
-              exec: (editor: JoditInstance) => {
-                beforeImageAction(editor)
-                pickImageRef.current?.(insertImage)
               },
             },
           ]
